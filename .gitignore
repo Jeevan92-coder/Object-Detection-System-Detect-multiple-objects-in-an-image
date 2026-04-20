@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+.env
+backend/uploads/*
+backend/results/*
+backend/logs/*
+backend/models/*.pt
+data/coco/images/
+data/coco/annotations/
+*.zip
+.DS_Store
+.idea/
+.vscode/
+*.egg-info/

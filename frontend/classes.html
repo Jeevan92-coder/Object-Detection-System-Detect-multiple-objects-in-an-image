@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Classes — ObjectDet.AI</title>
+<meta name="description" content="Browse all 80 COCO classes detectable by YOLOv8. Filter, search and select classes for real-time detection."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+<style>
+/* ── Class card emoji icons ── */
+.cls-card { position: relative; overflow: hidden; }
+.cls-card .cls-emoji {
+  font-size: 22px; display: block; margin-bottom: 6px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+}
+/* ── Category pill colors ── */
+.ctab[data-cat="👤 People"]    { --cat-color: #00d4ff; }
+.ctab[data-cat="🚗 Vehicles"]  { --cat-color: #f59e0b; }
+.ctab[data-cat="🚦 Traffic"]   { --cat-color: #ef4444; }
+.ctab[data-cat="🐾 Animals"]   { --cat-color: #10b981; }
+.ctab[data-cat="🎒 Accessories"]{ --cat-color: #8b5cf6; }
+.ctab[data-cat="⚽ Sports"]    { --cat-color: #3b82f6; }
+.ctab[data-cat="🍎 Food"]      { --cat-color: #ec4899; }
+.ctab[data-cat="🏠 Indoor"]    { --cat-color: #94a3b8; }
+.ctab.act { background: var(--cat-color, linear-gradient(135deg,var(--purple),var(--cyan))) !important; }
+
+/* Stats row */
+.cls-stats-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr));
+  gap: 14px; margin-bottom: 28px;
+}
+.cls-stat-card {
+  border-radius: 12px; padding: 18px 16px; border: 1px solid var(--ln);
+  display: flex; flex-direction: column; gap: 6px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.cls-stat-card:hover { transform: translateY(-2px); }
+.cls-stat-card:nth-child(1) { background: linear-gradient(135deg,rgba(0,212,255,0.08),var(--bg2)); border-top: 2px solid var(--cyan); }
+.cls-stat-card:nth-child(2) { background: linear-gradient(135deg,rgba(139,92,246,0.08),var(--bg2)); border-top: 2px solid var(--purple); }
+.cls-stat-card:nth-child(3) { background: linear-gradient(135deg,rgba(16,185,129,0.08),var(--bg2)); border-top: 2px solid var(--green); }
+.cls-stat-card:nth-child(4) { background: linear-gradient(135deg,rgba(245,158,11,0.08),var(--bg2)); border-top: 2px solid var(--orange); }
+.cls-stat-val { font-size: 28px; font-weight: 900; font-family: var(--mono); }
+.cls-stat-card:nth-child(1) .cls-stat-val { color: var(--cyan); }
+.cls-stat-card:nth-child(2) .cls-stat-val { color: var(--purple); }
+.cls-stat-card:nth-child(3) .cls-stat-val { color: var(--green); }
+.cls-stat-card:nth-child(4) .cls-stat-val { color: var(--orange); }
+.cls-stat-lbl { font-size: 10px; font-family: var(--mono); color: var(--txt3); letter-spacing: 1.5px; text-transform: uppercase; }
+.cls-stat-sub { font-size: 11px; color: var(--txt3); }
+
+/* Selection bar */
+.sel-bar {
+  display: none; margin-top: 16px; padding: 14px 18px;
+  background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.25);
+  border-radius: 10px; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.sel-bar.visible { display: flex; }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-radial"></div><div class="scanline"></div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="4" width="15" height="15" rx="3" stroke="url(#lga1)" stroke-width="1.8"/>
+        <rect x="25" y="4" width="15" height="15" rx="3" stroke="url(#lga2)" stroke-width="1.8"/>
+        <rect x="4" y="25" width="15" height="15" rx="3" stroke="url(#lga3)" stroke-width="1.8"/>
+        <rect x="25" y="25" width="15" height="15" rx="3" stroke="url(#lga4)" stroke-width="1.8"/>
+        <circle cx="22" cy="22" r="5" fill="url(#lgac)"/>
+        <defs>
+          <linearGradient id="lga1" x1="4" y1="4" x2="19" y2="19"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+          <linearGradient id="lga2" x1="25" y1="4" x2="40" y2="19"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+          <linearGradient id="lga3" x1="4" y1="25" x2="19" y2="40"><stop stop-color="#10b981"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+          <linearGradient id="lga4" x1="25" y1="25" x2="40" y2="40"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#10b981"/></linearGradient>
+          <linearGradient id="lgac" x1="17" y1="17" x2="27" y2="27"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <div class="logo-name">ObjectDet<span style="color:#8b5cf6">.</span>AI</div>
+        <div class="logo-tag">YOLOv8 × COCO-80 × OpenCV</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html"   class="nv">🎯 Detect</a>
+      <a href="camera.html"  class="nv">📷 Camera</a>
+      <a href="batch.html"   class="nv">📦 Batch</a>
+      <a href="classes.html" class="nv active">🗂️ Classes</a>
+      <a href="docs.html"    class="nv">📚 API</a>
+    </nav>
+    <div class="status-pill">
+      <span class="sdot" id="sdot"></span>
+      <span id="stxt">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">COCO 80-Class Reference</div>
+    <h1 class="hero-h1">All <em>80</em> Classes</h1>
+    <p class="hero-p">Browse, filter, and select every object class detectable by YOLOv8 trained on COCO 2017. From people and vehicles to food and household items — all real-world objects.</p>
+    <div class="hero-chips">
+      <div class="chip"><span>80</span> Total Classes</div>
+      <div class="chip"><span>330K</span> Train Images</div>
+      <div class="chip"><span>1.5M</span> Instances</div>
+      <div class="chip"><span>8</span> Categories</div>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="hm-row"><span class="hm-k">DATASET</span><span class="hm-v" style="font-size:11px">COCO 2017</span></div>
+    <div class="hm-row"><span class="hm-k">CLASSES</span><span class="hm-v">80</span></div>
+    <div class="hm-row"><span class="hm-k">CATEGORIES</span><span class="hm-v" style="color:var(--purple)">8</span></div>
+    <div class="hm-row"><span class="hm-k">INSTANCES</span><span class="hm-v" style="color:var(--green)">1.5M</span></div>
+  </div>
+</section>
+
+<!-- ══ CLASSES BANNER ══ -->
+<div style="max-width:1440px;margin:0 auto;padding:0 28px 20px;position:relative;z-index:2;">
+  <div class="classes-banner">
+    <img src="images/classes_preview.png" alt="Preview of COCO dataset classes — person, car, dog, cat, bicycle, and more"/>
+  </div>
+</div>
+
+<main class="wrap" style="padding-top:0">
+
+  <!-- Stats row -->
+  <div class="cls-stats-row">
+    <div class="cls-stat-card">
+      <span class="cls-stat-val">80</span>
+      <span class="cls-stat-lbl">Total Classes</span>
+      <span class="cls-stat-sub">Across 8 categories</span>
+    </div>
+    <div class="cls-stat-card">
+      <span class="cls-stat-val">330K</span>
+      <span class="cls-stat-lbl">Training Images</span>
+      <span class="cls-stat-sub">COCO 2017 train split</span>
+    </div>
+    <div class="cls-stat-card">
+      <span class="cls-stat-val">1.5M</span>
+      <span class="cls-stat-lbl">Object Instances</span>
+      <span class="cls-stat-sub">Annotated bounding boxes</span>
+    </div>
+    <div class="cls-stat-card">
+      <span class="cls-stat-val">5ms</span>
+      <span class="cls-stat-lbl">Inference Speed</span>
+      <span class="cls-stat-sub">YOLOv8n on GPU</span>
+    </div>
+  </div>
+
+  <section class="card">
+    <div class="card-hdr">
+      <span class="tag">COCO</span>
+      <h2>Class Explorer</h2>
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <span id="visCount" style="font-family:var(--mono);font-size:11px;color:var(--txt3)">80 classes</span>
+        <input type="text" id="search" placeholder="🔍  Search classes…" class="txt-in" style="width:200px"/>
+      </div>
+    </div>
+
+    <div class="cat-tabs" id="tabs"></div>
+    <div class="cls-grid" id="grid"></div>
+
+    <div class="sel-bar" id="selBar">
+      <span id="selCount" style="font-family:var(--mono);font-size:12px;color:var(--txt2)">0 selected</span>
+      <button class="sm-btn" id="useBtn" style="background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;border:none;font-family:var(--sans)">Use as Filter →</button>
+      <button class="sm-btn" id="clrBtn">Clear All</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <div class="ft-dot" style="background:var(--purple)"></div>
+      <span>ObjectDet.AI v2.0</span>
+    </div>
+    <span>COCO Dataset: 80 classes · 330K images · 1.5M instances</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="js/api.js"></script><script src="js/ui.js"></script>
+<script>
+/* ── Class emoji map ── */
+const EMOJI = {
+  "person":"🧑","bicycle":"🚲","car":"🚗","motorcycle":"🏍️","airplane":"✈️","bus":"🚌","train":"🚂",
+  "truck":"🚛","boat":"⛵","traffic light":"🚦","fire hydrant":"🧯","stop sign":"🛑",
+  "parking meter":"🅿️","bench":"🪑","bird":"🐦","cat":"🐱","dog":"🐶","horse":"🐴","sheep":"🐑",
+  "cow":"🐄","elephant":"🐘","bear":"🐻","zebra":"🦓","giraffe":"🦒","backpack":"🎒",
+  "umbrella":"☂️","handbag":"👜","tie":"👔","suitcase":"🧳","frisbee":"🥏","skis":"⛷️",
+  "snowboard":"🏂","sports ball":"⚽","kite":"🪁","baseball bat":"⚾","baseball glove":"🧤",
+  "skateboard":"🛹","surfboard":"🏄","tennis racket":"🎾","bottle":"🍶","wine glass":"🍷",
+  "cup":"☕","fork":"🍴","knife":"🔪","spoon":"🥄","bowl":"🥣","banana":"🍌","apple":"🍎",
+  "sandwich":"🥪","orange":"🍊","broccoli":"🥦","carrot":"🥕","hot dog":"🌭","pizza":"🍕",
+  "donut":"🍩","cake":"🎂","chair":"🪑","couch":"🛋️","potted plant":"🌱","bed":"🛏️",
+  "dining table":"🍽️","toilet":"🚽","tv":"📺","laptop":"💻","mouse":"🖱️","remote":"📱",
+  "keyboard":"⌨️","cell phone":"📱","microwave":"📦","oven":"🍳","toaster":"🍞",
+  "sink":"🚰","refrigerator":"🧊","book":"📚","clock":"🕐","vase":"🏺","scissors":"✂️",
+  "teddy bear":"🧸","hair drier":"💨","toothbrush":"🪥"
+};
+
+const CAT_COLORS = {
+  "All":           "#00d4ff",
+  "👤 People":     "#00d4ff",
+  "🚗 Vehicles":   "#f59e0b",
+  "🚦 Traffic":    "#ef4444",
+  "🐾 Animals":    "#10b981",
+  "🎒 Accessories":"#8b5cf6",
+  "⚽ Sports":     "#3b82f6",
+  "🍎 Food":       "#ec4899",
+  "🏠 Indoor":     "#94a3b8"
+};
+
+const CATS = {
+  "All": [],
+  "👤 People":    ["person"],
+  "🚗 Vehicles":  ["bicycle","car","motorcycle","airplane","bus","train","truck","boat"],
+  "🚦 Traffic":   ["traffic light","fire hydrant","stop sign","parking meter"],
+  "🐾 Animals":   ["bird","cat","dog","horse","sheep","cow","elephant","bear","zebra","giraffe"],
+  "🎒 Accessories":["backpack","umbrella","handbag","tie","suitcase"],
+  "⚽ Sports":    ["frisbee","skis","snowboard","sports ball","kite","baseball bat","baseball glove","skateboard","surfboard","tennis racket"],
+  "🍎 Food":      ["bottle","wine glass","cup","fork","knife","spoon","bowl","banana","apple","sandwich","orange","broccoli","carrot","hot dog","pizza","donut","cake"],
+  "🏠 Indoor":    ["chair","couch","potted plant","bed","dining table","toilet","tv","laptop","mouse","remote","keyboard","cell phone","microwave","oven","toaster","sink","refrigerator","book","clock","vase","scissors","teddy bear","hair drier","toothbrush"],
+};
+const ALL = ["person","bicycle","car","motorcycle","airplane","bus","train","truck","boat","traffic light","fire hydrant","stop sign","parking meter","bench","bird","cat","dog","horse","sheep","cow","elephant","bear","zebra","giraffe","backpack","umbrella","handbag","tie","suitcase","frisbee","skis","snowboard","sports ball","kite","baseball bat","baseball glove","skateboard","surfboard","tennis racket","bottle","wine glass","cup","fork","knife","spoon","bowl","banana","apple","sandwich","orange","broccoli","carrot","hot dog","pizza","donut","cake","chair","couch","potted plant","bed","dining table","toilet","tv","laptop","mouse","remote","keyboard","cell phone","microwave","oven","toaster","sink","refrigerator","book","clock","vase","scissors","teddy bear","hair drier","toothbrush"];
+const idMap = {}; ALL.forEach((n, i) => idMap[n] = i);
+let sel = new Set(), cat = "All", q = "";
+
+const tabs     = document.getElementById("tabs");
+const grid     = document.getElementById("grid");
+const search   = document.getElementById("search");
+const selBar   = document.getElementById("selBar");
+const selCount = document.getElementById("selCount");
+const visCount = document.getElementById("visCount");
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const ok = await API.checkHealth(); UI.setStatus(ok);
+
+  Object.keys(CATS).forEach(c => {
+    const b = document.createElement("button");
+    b.className = "ctab" + (c === "All" ? " act" : "");
+    b.dataset.cat = c;
+    b.textContent = c === "All" ? `All (${ALL.length})` : c;
+    const col = CAT_COLORS[c] || "#00d4ff";
+    if (c === "All") b.style.cssText = `background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;border-color:transparent;`;
+    b.onclick = () => {
+      cat = c; document.querySelectorAll(".ctab").forEach(x => {
+        x.classList.remove("act");
+        x.style.cssText = "";
+      });
+      b.classList.add("act");
+      if (c === "All") b.style.cssText = `background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;border-color:transparent;`;
+      else b.style.cssText = `background:${col};color:#fff;border-color:transparent;`;
+      render();
+    };
+    tabs.appendChild(b);
+  });
+
+  search.addEventListener("input", () => { q = search.value.toLowerCase(); render(); });
+  render();
+
+  document.getElementById("useBtn").onclick = () => {
+    sessionStorage.setItem("ods_class_filter", [...sel].join(", "));
+    UI.toast("✅ Filter set — going to detect…", "ok");
+    setTimeout(() => location.href = "index.html", 1200);
+  };
+  document.getElementById("clrBtn").onclick = () => { sel.clear(); updateSel(); render(); };
+});
+
+function render() {
+  let cls = cat === "All" ? [...ALL] : (CATS[cat] || []);
+  if (q) cls = cls.filter(n => n.includes(q));
+  visCount.textContent = `${cls.length} class${cls.length !== 1 ? "es" : ""}`;
+  const col = CAT_COLORS[cat] || "#00d4ff";
+  grid.innerHTML = cls.map(n => {
+    const id = idMap[n]; const c = UI.color(id); const s = sel.has(n);
+    const emoji = EMOJI[n] || "📦";
+    return `<div class="cls-card${s ? " sel" : ""}" data-n="${n}" style="${s ? `border-color:${c};background:${c}18;` : ""}">
+      <span class="cls-emoji">${emoji}</span>
+      <div class="cls-id">#${String(id).padStart(2, "0")}</div>
+      <div class="cls-name" style="color:${c}">${n}</div>
+    </div>`;
+  }).join("");
+
+  grid.querySelectorAll(".cls-card").forEach(c => {
+    c.onclick = () => {
+      const n = c.dataset.n;
+      sel.has(n) ? sel.delete(n) : sel.add(n);
+      updateSel(); render();
+    };
+    c.style.transition = "all 0.18s";
+  });
+}
+
+function updateSel() {
+  selBar.classList.toggle("visible", sel.size > 0);
+  selCount.textContent = `${sel.size} class${sel.size > 1 ? "es" : ""} selected`;
+}
+</script>
+</body>
+</html>

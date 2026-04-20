@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  api:
+    build: ./backend
+    container_name: ods-api
+    restart: unless-stopped
+    ports: ["5000:5000"]
+    environment:
+      - YOLO_MODEL=${YOLO_MODEL:-yolov8n.pt}
+      - DEVICE=${DEVICE:-cpu}
+      - CONF_THRESHOLD=0.25
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/results:/app/results
+      - ./backend/models:/app/models
+      - ./backend/logs:/app/logs
+      - ./data:/app/data
+  frontend:
+    image: nginx:alpine
+    container_name: ods-frontend
+    ports: ["8080:80"]
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [api]

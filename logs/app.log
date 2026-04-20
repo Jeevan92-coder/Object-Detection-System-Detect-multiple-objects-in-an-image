@@ -1,0 +1,183 @@
+2026-04-17 16:03:39,852 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.41:5000
+2026-04-17 16:03:39,852 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-04-17 16:06:28,393 [INFO] detector: YOLOv8 'yolov8n.pt' loaded on cpu
+2026-04-17 16:06:28,393 [INFO] __main__: Detector ready
+2026-04-17 16:06:28,396 [INFO] __main__: ODS v2 API starting on port 5000
+2026-04-17 16:06:28,403 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.41:5000
+2026-04-17 16:06:28,404 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-04-17 16:07:00,192 [INFO] detector: YOLOv8 'yolov8n.pt' loaded on cpu
+2026-04-17 16:07:00,193 [INFO] __main__: Detector ready
+2026-04-17 16:07:00,196 [INFO] __main__: ODS v2 API starting on port 5000
+2026-04-17 16:07:00,203 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.41:5000
+2026-04-17 16:07:00,203 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-04-17 16:09:11,672 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:09:11] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:10:04,816 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:10:04] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:19:58,079 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:19:58] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:19:58,346 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:19:58] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 16:20:06,189 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:20:06] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:20:06,510 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:20:06] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 16:20:07,222 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:20:07] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:20:07,566 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:20:07] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 16:20:07,828 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:20:07] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:21:11,851 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:21:11] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:21:12,116 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:21:12] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 16:21:27,525 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:21:27] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:22:09,239 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:22:09] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 16:22:09,701 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:22:09] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 16:56:53,501 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 16:56:53] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:08,918 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:08] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:05:09,148 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:09] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 17:05:21,150 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:21] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:05:21,465 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:21] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 17:05:22,350 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:22] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:05:22,671 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:22] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 17:05:24,712 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:24] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:05:25,049 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:25] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 17:05:28,758 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:28] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:29,718 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:29] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:30,309 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:30] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:31,049 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:31] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:31,574 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:31] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:32,686 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:32] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:32,862 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:32] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:33,906 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:33] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:33,938 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:33] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:34,703 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:34] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:35,047 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:35] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:35,900 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:35] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:36,583 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:36] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:37,433 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:37] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:37,869 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:37] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:38,751 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:38] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:39,505 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:39] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:39,843 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:39] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:40,699 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:40] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:41,089 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:41] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:41,808 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:41] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:42,412 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:42] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:43,405 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:43] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:43,755 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:43] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:44,545 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:44] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:44,987 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:44] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:45,360 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:45] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:46,337 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:46] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:46,566 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:46] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:47,551 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:47] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:48,005 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:48] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:48,702 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:48] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:49,324 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:49] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:50,381 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:50] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:50,435 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:50] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:51,215 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:51] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:51,572 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:51] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:52,491 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:52] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:53,239 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:53] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:54,316 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:54] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:54,755 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:54] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:55,518 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:55] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:55,536 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:55] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:56,489 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:56] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:57,200 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:57] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:58,005 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:58] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:58,414 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:58] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:05:59,201 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:05:59] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:00,084 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:00] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:01,073 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:01] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:01,138 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:01] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:01,856 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:01] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:02,326 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:02] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:03,219 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:03] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:03,877 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:03] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:04,753 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:04] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:05,168 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:05] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:06,373 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:06] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:06,438 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:06] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:07,023 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:07] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:07,268 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:07] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:08,198 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:08] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:08,617 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:08] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:09,349 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:09] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:10,013 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:10] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:11,008 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:11] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:11,348 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:11] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:12,098 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:12] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:12,135 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:12] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:12,908 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:12] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:13,630 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:13] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:14,169 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:14] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:14,726 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:14] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:15,359 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:15] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:16,180 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:16] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:16,720 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:16] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:17,433 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:17] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:17,535 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:17] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:18,140 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:18] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:18,737 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:18] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:19,488 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:19] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:20,001 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:20] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:20,851 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:20] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:21,073 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:21] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:22,050 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:22] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:22,524 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:22] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-04-17 17:06:22,776 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:22] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:06:23,960 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:23] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:06:33,291 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:33] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:06:37,818 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:37] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:06:38,564 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:38] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:06:38,813 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:38] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:06:38,905 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:38] "GET /api/info HTTP/1.1" 200 -
+2026-04-17 17:06:39,136 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:39] "GET /api/health HTTP/1.1" 200 -
+2026-04-17 17:06:39,216 [INFO] werkzeug: 127.0.0.1 - - [17/Apr/2026 17:06:39] "GET /api/info HTTP/1.1" 200 -
+2026-05-04 11:25:28,470 [INFO] detector: YOLOv8 'yolov8n.pt' loaded on cpu
+2026-05-04 11:25:28,472 [INFO] __main__: Detector ready
+2026-05-04 11:25:28,474 [INFO] __main__: ODS v2 API starting on port 5000
+2026-05-04 11:25:28,483 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.154:5000
+2026-05-04 11:25:28,484 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-06 09:30:08,892 [INFO] detector: YOLOv8 'yolov8n.pt' loaded on cpu
+2026-05-06 09:30:08,893 [INFO] __main__: Detector ready
+2026-05-06 09:30:08,896 [INFO] __main__: ODS v2 API starting on port 5000
+2026-05-06 09:30:08,906 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.155:5000
+2026-05-06 09:30:08,907 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-06 09:32:05,653 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:05] "GET /api/health HTTP/1.1" 200 -
+2026-05-06 09:32:05,914 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:05] "GET /api/info HTTP/1.1" 200 -
+2026-05-06 09:32:06,802 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:06] "GET /api/health HTTP/1.1" 200 -
+2026-05-06 09:32:07,115 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:07] "GET /api/info HTTP/1.1" 200 -
+2026-05-06 09:32:09,698 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:09] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:10,415 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:10] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:10,637 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:10] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:11,230 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:11] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:11,488 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:11] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:11,728 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:11] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:12,034 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:12] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:12,319 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:12] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:12,823 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:12] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:13,138 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:13] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:13,443 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:13] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:14,029 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:14] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:14,285 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:14] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:14,530 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:14] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:15,099 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:15] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:15,151 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:15] "OPTIONS /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:15,706 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:15] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:15,990 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:15] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:16,588 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:16] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:16,885 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:16] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:17,545 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:17] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:17,912 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:17] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:18,509 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:18] "POST /api/detect/frame HTTP/1.1" 200 -
+2026-05-06 09:32:18,833 [INFO] werkzeug: 127.0.0.1 - - [06/May/2026 09:32:18] "POST /api/detect/frame HTTP/1.1" 200 -

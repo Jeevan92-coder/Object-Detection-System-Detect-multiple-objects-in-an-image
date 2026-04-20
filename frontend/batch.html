@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Batch Processing — ObjectDet.AI</title>
+<meta name="description" content="Batch process up to 10 images at once with YOLOv8 object detection. Get aggregate stats and per-image results."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-radial"></div><div class="scanline"></div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="4" width="15" height="15" rx="3" stroke="url(#lg1b)" stroke-width="1.8"/>
+        <rect x="25" y="4" width="15" height="15" rx="3" stroke="url(#lg2b)" stroke-width="1.8"/>
+        <rect x="4" y="25" width="15" height="15" rx="3" stroke="url(#lg3b)" stroke-width="1.8"/>
+        <rect x="25" y="25" width="15" height="15" rx="3" stroke="url(#lg4b)" stroke-width="1.8"/>
+        <circle cx="22" cy="22" r="5" fill="url(#lgcb)"/>
+        <defs>
+          <linearGradient id="lg1b" x1="4" y1="4" x2="19" y2="19"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+          <linearGradient id="lg2b" x1="25" y1="4" x2="40" y2="19"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+          <linearGradient id="lg3b" x1="4" y1="25" x2="19" y2="40"><stop stop-color="#10b981"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+          <linearGradient id="lg4b" x1="25" y1="25" x2="40" y2="40"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#10b981"/></linearGradient>
+          <linearGradient id="lgcb" x1="17" y1="17" x2="27" y2="27"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <div class="logo-name">ObjectDet<span style="color:#8b5cf6">.</span>AI</div>
+        <div class="logo-tag">YOLOv8 × COCO-80 × OpenCV</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html"   class="nv">🎯 Detect</a>
+      <a href="camera.html"  class="nv">📷 Camera</a>
+      <a href="batch.html"   class="nv active">📦 Batch</a>
+      <a href="classes.html" class="nv">🗂️ Classes</a>
+      <a href="docs.html"    class="nv">📚 API</a>
+    </nav>
+    <div class="status-pill">
+      <span class="sdot" id="sdot"></span>
+      <span id="stxt">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Batch Processing Pipeline</div>
+    <h1 class="hero-h1">Detect in <em>Bulk</em></h1>
+    <p class="hero-p">Upload up to 10 images and process them in a single API call. Get aggregate stats, class distribution charts, and per-image detection results — all at once.</p>
+    <div class="hero-chips">
+      <div class="chip"><span>10</span> Max Images</div>
+      <div class="chip"><span>1</span> API Call</div>
+      <div class="chip"><span>50MB</span> Per File</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;">
+      <span class="stat-badge badge-orange">📦 Batch POST</span>
+      <span class="stat-badge badge-green">⚡ Parallel Processing</span>
+      <span class="stat-badge badge-purple">📊 Aggregate Stats</span>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="hm-row"><span class="hm-k">ENDPOINT</span><span class="hm-v" style="font-size:10px">/detect/batch</span></div>
+    <div class="hm-row"><span class="hm-k">METHOD</span><span class="hm-v" style="color:var(--purple)">POST</span></div>
+    <div class="hm-row"><span class="hm-k">FORMAT</span><span class="hm-v" style="font-size:11px">multipart</span></div>
+    <div class="hm-row"><span class="hm-k">MAX FILES</span><span class="hm-v" style="color:var(--orange)">10</span></div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="grid-2">
+
+    <!-- INPUT -->
+    <section class="card card-orange">
+      <div class="card-hdr">
+        <span class="tag" style="color:var(--orange);border-color:rgba(245,158,11,0.25);background:rgba(245,158,11,0.08)">INPUT</span>
+        <h2>Upload Images <span style="font-family:var(--mono);font-size:10px;color:var(--txt3);font-weight:400">max 10</span></h2>
+      </div>
+
+      <div class="dropzone" id="dz">
+        <div class="dz-idle" id="dzIdle">
+          <div class="dz-icon">
+            <svg viewBox="0 0 64 64" fill="none" width="52" height="52">
+              <rect x="6" y="12" width="42" height="38" rx="5" stroke="url(#bdz1)" stroke-width="2"/>
+              <rect x="14" y="6" width="42" height="38" rx="5" stroke="url(#bdz2)" stroke-width="2" stroke-dasharray="4 3"/>
+              <path d="M20 36l8-9 8 9" stroke="url(#bdz3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+                <linearGradient id="bdz1" x1="6" y1="12" x2="48" y2="50"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#10b981"/></linearGradient>
+                <linearGradient id="bdz2" x1="14" y1="6" x2="56" y2="44"><stop stop-color="#10b981"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+                <linearGradient id="bdz3" x1="20" y1="27" x2="36" y2="36"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <p class="dz-title">Drop images or <span class="lnk" id="dzBrowse">browse files</span></p>
+          <p class="dz-hint">Multiple files · JPG PNG BMP WEBP · 50MB each</p>
+        </div>
+        <input type="file" id="fileIn" accept="image/*" multiple class="hidden"/>
+      </div>
+
+      <div class="file-list hidden" id="fileList"></div>
+
+      <div class="settings">
+        <div class="sg">
+          <label>Confidence <span class="sv" id="confV">0.25</span></label>
+          <input type="range" id="confS" min="0.05" max="0.95" step="0.05" value="0.25" class="slider"/>
+        </div>
+        <div class="sg">
+          <label>IOU Threshold <span class="sv" id="iouV">0.45</span></label>
+          <input type="range" id="iouS" min="0.1" max="0.9" step="0.05" value="0.45" class="slider"/>
+        </div>
+      </div>
+
+      <button class="run-btn" id="runBtn" disabled style="background:linear-gradient(135deg,var(--orange),var(--green))">
+        <span id="rIcon">▶▶</span>
+        <span id="rLabel">Run Batch</span>
+        <div class="ring hidden" id="ring"></div>
+      </button>
+    </section>
+
+    <!-- AGGREGATE STATS -->
+    <section class="card card-green">
+      <div class="card-hdr">
+        <span class="tag" style="color:var(--green);border-color:rgba(16,185,129,0.25);background:rgba(16,185,129,0.08)">AGGREGATE</span>
+        <h2>Batch Statistics</h2>
+      </div>
+      <div class="empty" id="empty">
+        <div class="empty-icon">📦</div>
+        <p style="font-size:14px;font-weight:600">Upload images to begin</p>
+        <p class="empty-sub">Results will appear here after detection</p>
+      </div>
+      <div class="hidden" id="aggWrap">
+        <div class="metrics" id="aggMetrics"></div>
+        <div class="chart"   id="aggChart"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- RESULTS GRID -->
+  <section class="card" id="gridCard" style="display:none">
+    <div class="card-hdr">
+      <span class="tag">RESULTS</span>
+      <h2 id="gridTitle">Batch Results</h2>
+    </div>
+    <div class="batch-grid" id="batchGrid"></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <div class="ft-dot" style="background:var(--orange)"></div>
+      <span>ObjectDet.AI v2.0 — Batch Processing</span>
+    </div>
+    <span>YOLOv8 · COCO 2017 · Flask</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="js/api.js"></script><script src="js/ui.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const dz=document.getElementById("dz"), dzIdle=document.getElementById("dzIdle"),
+        dzBrowse=document.getElementById("dzBrowse"), fileIn=document.getElementById("fileIn"),
+        fileList=document.getElementById("fileList"), confS=document.getElementById("confS"),
+        confV=document.getElementById("confV"), iouS=document.getElementById("iouS"),
+        iouV=document.getElementById("iouV"), runBtn=document.getElementById("runBtn"),
+        rLabel=document.getElementById("rLabel"), ring=document.getElementById("ring"),
+        empty=document.getElementById("empty"), aggWrap=document.getElementById("aggWrap"),
+        aggMetrics=document.getElementById("aggMetrics"), aggChart=document.getElementById("aggChart"),
+        batchGrid=document.getElementById("batchGrid"), gridCard=document.getElementById("gridCard"),
+        gridTitle=document.getElementById("gridTitle");
+
+  let files = [];
+  const ok = await API.checkHealth(); UI.setStatus(ok);
+  UI.syncSlider("confS","confV"); UI.syncSlider("iouS","iouV");
+
+  dzBrowse.onclick = e => { e.stopPropagation(); fileIn.click(); };
+  dz.onclick = () => fileIn.click();
+  fileIn.onchange = e => addFiles([...e.target.files]);
+  dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("drag"); });
+  dz.addEventListener("dragleave", () => dz.classList.remove("drag"));
+  dz.addEventListener("drop", e => {
+    e.preventDefault(); dz.classList.remove("drag");
+    addFiles([...e.dataTransfer.files].filter(f => f.type.startsWith("image/")));
+  });
+
+  function addFiles(arr) {
+    const left = 10 - files.length;
+    if (left <= 0) { UI.toast("Max 10 images", "err"); return; }
+    files.push(...arr.slice(0, left)); renderList(); updateBtn();
+  }
+  function removeFile(i) { files.splice(i, 1); renderList(); updateBtn(); }
+
+  function renderList() {
+    if (!files.length) { fileList.classList.add("hidden"); return; }
+    fileList.classList.remove("hidden");
+    fileList.innerHTML = `<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">` +
+      files.map((f, i) => `
+        <div class="file-item">
+          <span style="font-size:16px">🖼️</span>
+          <span class="file-item-name">${f.name}</span>
+          <span class="file-item-size">${UI.fmtSize(f.size)}</span>
+          <span class="file-item-rm" onclick="removeFile(${i})">✕</span>
+        </div>`).join("") + "</div>";
+  }
+
+  function updateBtn() {
+    runBtn.disabled = files.length === 0;
+    rLabel.textContent = files.length
+      ? `Run Batch (${files.length} image${files.length > 1 ? "s" : ""})`
+      : "Run Batch";
+  }
+
+  runBtn.onclick = async () => {
+    runBtn.disabled = true; ring.classList.remove("hidden"); rLabel.textContent = "Processing…";
+    try {
+      const res = await API.detectBatch(files, { confidence: +confS.value, iou: +iouS.value });
+      renderBatch(res.data);
+      UI.toast(`✅ Batch done — ${res.data.total_images} images`, "ok");
+    } catch(e) { UI.toast(`❌ ${e.message}`, "err", 5000); }
+    finally { runBtn.disabled = false; ring.classList.add("hidden"); updateBtn(); }
+  };
+
+  function renderBatch(data) {
+    empty.classList.add("hidden"); aggWrap.classList.remove("hidden");
+    gridCard.style.display = "block";
+    let tot = 0, totT = 0; const combined = {};
+    batchGrid.innerHTML = "";
+    (data.results || []).forEach(r => {
+      tot += r.total_objects; totT += (r.inference_time_ms || 0);
+      Object.entries(r.class_summary || {}).forEach(([k, v]) => { combined[k] = (combined[k] || 0) + v; });
+      const url = API.resUrl(r.result_image_url);
+      const card = document.createElement("div"); card.className = "bcard";
+      card.innerHTML = `${url ? `<img class="bcard-img" src="${url}" alt="${r.original_filename}" loading="lazy"/>` : ""}
+        <div class="bcard-body">
+          <div class="bcard-name">📄 ${r.original_filename || "Image"}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+            <span class="stat-badge badge-cyan" style="padding:4px 10px;font-size:10px"><span>${r.total_objects}</span> objects</span>
+            <span class="stat-badge badge-green" style="padding:4px 10px;font-size:10px">⚡ ${r.inference_time_ms || 0}ms</span>
+          </div>
+        </div>`;
+      batchGrid.appendChild(card);
+    });
+    aggMetrics.innerHTML = [
+      UI.metric(data.total_images, "Images"),
+      UI.metric(tot, "Objects"),
+      UI.metric(Object.keys(combined).length, "Classes"),
+      UI.metric(`${Math.round(totT)}ms`, "Total"),
+    ].join("");
+    gridTitle.textContent = `Results (${data.total_images} images · ${tot} objects)`;
+    const rows = Object.entries(combined).sort((a, b) => b[1] - a[1]);
+    const max = rows[0]?.[1] || 1;
+    aggChart.innerHTML = rows.map(([n, c], i) => {
+      const p = (c / max * 100).toFixed(1); const col = UI.color(i);
+      return `<div class="ch-row"><span class="ch-lbl">${n}</span><div class="ch-track"><div class="ch-fill" style="width:${p}%;background:${col}"></div></div><span class="ch-cnt">${c}</span></div>`;
+    }).join("");
+  }
+
+  window.removeFile = removeFile;
+});
+</script>
+</body></html>

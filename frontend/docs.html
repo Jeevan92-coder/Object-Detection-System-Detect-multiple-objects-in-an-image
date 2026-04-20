@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>API Docs — ObjectDet.AI</title>
+<meta name="description" content="Complete REST API reference for ObjectDet.AI. Covers detect/image, detect/frame, detect/batch, health, info, and classes endpoints."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+<style>
+/* ── Docs page extras ── */
+.endpoint-card {
+  border-radius: 12px; border: 1px solid var(--ln);
+  overflow: hidden; margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+.endpoint-card:hover { border-color: rgba(0,212,255,0.25); }
+.endpoint-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; cursor: pointer;
+  background: var(--bg3);
+  user-select: none;
+}
+.endpoint-header:hover { background: var(--bg4); }
+.endpoint-path {
+  font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--txt);
+  flex: 1;
+}
+.endpoint-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 4px;
+}
+.badge-GET  { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+.badge-POST { background: rgba(139,92,246,0.15); color: #8b5cf6; border: 1px solid rgba(139,92,246,0.3); }
+.endpoint-desc { font-size: 12px; color: var(--txt3); }
+.endpoint-chevron { color: var(--txt3); transition: transform 0.2s; font-size: 12px; }
+.endpoint-card.open .endpoint-chevron { transform: rotate(90deg); }
+.endpoint-body { display: none; border-top: 1px solid var(--ln); }
+.endpoint-card.open .endpoint-body { display: block; }
+
+/* Overview cards at top of docs */
+.api-overview {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+  gap: 14px; margin-bottom: 28px;
+}
+.api-ov-card {
+  border-radius: 12px; padding: 18px; border: 1px solid var(--ln);
+  background: var(--bg3); text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.api-ov-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.api-ov-icon { font-size: 28px; margin-bottom: 8px; }
+.api-ov-val { font-size: 22px; font-weight: 900; font-family: var(--mono); }
+.api-ov-lbl { font-size: 10px; font-family: var(--mono); color: var(--txt3); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
+.api-ov-card:nth-child(1) { border-top: 2px solid var(--cyan); }
+.api-ov-card:nth-child(1) .api-ov-val { color: var(--cyan); }
+.api-ov-card:nth-child(2) { border-top: 2px solid var(--purple); }
+.api-ov-card:nth-child(2) .api-ov-val { color: var(--purple); }
+.api-ov-card:nth-child(3) { border-top: 2px solid var(--green); }
+.api-ov-card:nth-child(3) .api-ov-val { color: var(--green); }
+.api-ov-card:nth-child(4) { border-top: 2px solid var(--orange); }
+.api-ov-card:nth-child(4) .api-ov-val { color: var(--orange); }
+
+/* TOC highlight */
+.doc-toc a.active { color: var(--cyan); border-left-color: var(--cyan); background: rgba(0,212,255,0.05); }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-radial"></div><div class="scanline"></div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="4" width="15" height="15" rx="3" stroke="url(#lgd1)" stroke-width="1.8"/>
+        <rect x="25" y="4" width="15" height="15" rx="3" stroke="url(#lgd2)" stroke-width="1.8"/>
+        <rect x="4" y="25" width="15" height="15" rx="3" stroke="url(#lgd3)" stroke-width="1.8"/>
+        <rect x="25" y="25" width="15" height="15" rx="3" stroke="url(#lgd4)" stroke-width="1.8"/>
+        <circle cx="22" cy="22" r="5" fill="url(#lgdc)"/>
+        <defs>
+          <linearGradient id="lgd1" x1="4" y1="4" x2="19" y2="19"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+          <linearGradient id="lgd2" x1="25" y1="4" x2="40" y2="19"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+          <linearGradient id="lgd3" x1="4" y1="25" x2="19" y2="40"><stop stop-color="#10b981"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+          <linearGradient id="lgd4" x1="25" y1="25" x2="40" y2="40"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#10b981"/></linearGradient>
+          <linearGradient id="lgdc" x1="17" y1="17" x2="27" y2="27"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <div class="logo-name">ObjectDet<span style="color:#8b5cf6">.</span>AI</div>
+        <div class="logo-tag">YOLOv8 × COCO-80 × OpenCV</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html"   class="nv">🎯 Detect</a>
+      <a href="camera.html"  class="nv">📷 Camera</a>
+      <a href="batch.html"   class="nv">📦 Batch</a>
+      <a href="classes.html" class="nv">🗂️ Classes</a>
+      <a href="docs.html"    class="nv active">📚 API</a>
+    </nav>
+    <div class="status-pill">
+      <span class="sdot" id="sdot"></span>
+      <span id="stxt">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">REST API Reference v2.0</div>
+    <h1 class="hero-h1">API <em>Docs</em></h1>
+    <p class="hero-p">Complete endpoint reference for ObjectDet.AI API. Base URL: <code>http://localhost:5000</code>. All endpoints prefixed with <code>/api</code>. JSON responses throughout.</p>
+    <div class="hero-chips">
+      <div class="chip"><span>6</span> Endpoints</div>
+      <div class="chip"><span>JSON</span> Response</div>
+      <div class="chip"><span>REST</span> API</div>
+      <div class="chip"><span>v2.0</span> New Frame API</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;">
+      <span class="stat-badge badge-cyan">🌐 localhost:5000</span>
+      <span class="stat-badge badge-green">✅ JSON Format</span>
+      <span class="stat-badge badge-purple">🔐 No Auth Required</span>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="hm-row"><span class="hm-k">BASE URL</span><span class="hm-v" style="font-size:10px">:5000/api</span></div>
+    <div class="hm-row"><span class="hm-k">VERSION</span><span class="hm-v">v2.0</span></div>
+    <div class="hm-row"><span class="hm-k">FORMAT</span><span class="hm-v" style="color:var(--green)">JSON</span></div>
+    <div class="hm-row"><span class="hm-k">ENDPOINTS</span><span class="hm-v" style="color:var(--orange)">6</span></div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- API Overview -->
+  <div class="api-overview">
+    <div class="api-ov-card">
+      <div class="api-ov-icon">🏥</div>
+      <div class="api-ov-val">GET</div>
+      <div class="api-ov-lbl">Health Check</div>
+    </div>
+    <div class="api-ov-card">
+      <div class="api-ov-icon">🖼️</div>
+      <div class="api-ov-val">POST</div>
+      <div class="api-ov-lbl">Image Detect</div>
+    </div>
+    <div class="api-ov-card">
+      <div class="api-ov-icon">📷</div>
+      <div class="api-ov-val">POST</div>
+      <div class="api-ov-lbl">Frame Detect</div>
+    </div>
+    <div class="api-ov-card">
+      <div class="api-ov-icon">📦</div>
+      <div class="api-ov-val">POST</div>
+      <div class="api-ov-lbl">Batch Detect</div>
+    </div>
+  </div>
+
+  <div class="card docs-layout">
+
+    <!-- ── TOC ── -->
+    <nav class="doc-toc">
+      <h3>Endpoints</h3>
+      <ul>
+        <li><a href="#health" class="toc-link">GET /health</a></li>
+        <li><a href="#info"   class="toc-link">GET /info</a></li>
+        <li><a href="#image"  class="toc-link">POST /detect/image</a></li>
+        <li><a href="#frame"  class="toc-link">POST /detect/frame</a></li>
+        <li><a href="#batch"  class="toc-link">POST /detect/batch</a></li>
+        <li><a href="#classes" class="toc-link">GET /classes</a></li>
+        <li><a href="#py"     class="toc-link">Python Example</a></li>
+        <li><a href="#js"     class="toc-link">JS Example</a></li>
+      </ul>
+    </nav>
+
+    <!-- ── Content ── -->
+    <div>
+
+      <!-- Health -->
+      <div class="doc-sec" id="health">
+        <h2><span class="meth GET">GET</span> /api/health</h2>
+        <p>Service health check. Returns model info, device status, and total class count. Use this to verify your backend is running before making requests.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response 200 OK</div>
+          <pre>{ "status":"healthy", "model":"yolov8n.pt", "device":"cpu", "classes":80 }</pre>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="doc-sec" id="info">
+        <h2><span class="meth GET">GET</span> /api/info</h2>
+        <p>Returns detailed model configuration, list of supported input formats, and the full array of 80 COCO class names sorted by class ID.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response 200 OK</div>
+          <pre>{ "model":"yolov8n.pt", "classes":["person","bicycle","car",...], "formats":["jpg","png","bmp","webp"] }</pre>
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="doc-sec" id="image">
+        <h2><span class="meth POST">POST</span> /api/detect/image</h2>
+        <p>Detect objects in a single uploaded image. Returns annotated result image URL and full detection data with bounding boxes, confidence scores, and class summaries.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Form Fields</div>
+          <pre>image       File    required  JPG / PNG / BMP / WEBP
+confidence  float   optional  default 0.25
+iou         float   optional  default 0.45
+classes     string  optional  comma-separated class filter</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">cURL Example</div>
+          <pre>curl -X POST http://localhost:5000/api/detect/image \
+  -F "image=@photo.jpg" \
+  -F "confidence=0.3" \
+  -F "classes=person,car"</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response 200 OK</div>
+          <pre>{
+  "success": true,
+  "data": {
+    "total_objects": 3,
+    "detections": [{
+      "class_id": 0,
+      "class_name": "person",
+      "confidence": 0.91,
+      "bbox": { "x1":100, "y1":50, "x2":250, "y2":400 },
+      "area_px": 52500,
+      "center": { "x":175, "y":225 }
+    }],
+    "class_summary": { "person":2, "car":1 },
+    "result_image_url": "/api/results/result_abc.jpg",
+    "inference_time_ms": 4.7
+  }
+}</pre>
+        </div>
+      </div>
+
+      <!-- Frame -->
+      <div class="doc-sec" id="frame">
+        <h2><span class="meth POST">POST</span> /api/detect/frame</h2>
+        <p>⭐ <strong>New in v2</strong> — For live camera: send a base64-encoded JPEG frame, get back detections + annotated frame as base64. Designed for ultra-low-latency webcam integration.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">JSON Body</div>
+          <pre>{
+  "frame":      "data:image/jpeg;base64,/9j/4AAQ...",
+  "confidence": 0.25,
+  "iou":        0.45,
+  "classes":    ["person","car"]  // optional filter
+}</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response 200 OK</div>
+          <pre>{
+  "success": true,
+  "data": {
+    "total_objects": 2,
+    "detections":    [...],
+    "class_summary": { "person":1, "car":1 },
+    "frame_b64":     "/9j/4AAQ...",  // annotated JPEG
+    "image_size":    { "width":1280, "height":720 }
+  }
+}</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">JavaScript (Webcam Integration)</div>
+          <pre>// Capture frame from video element
+offCanvas.drawImage(video, 0, 0, w, h);
+const b64 = offCanvas.toDataURL("image/jpeg", 0.6);
+
+const res = await fetch("/api/detect/frame", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ frame: b64, confidence: 0.25 })
+});
+const { data } = await res.json();
+
+// Draw annotated frame back onto visible canvas
+const img = new Image();
+img.src = "data:image/jpeg;base64," + data.frame_b64;
+img.onload = () => ctx.drawImage(img, 0, 0);</pre>
+        </div>
+      </div>
+
+      <!-- Batch -->
+      <div class="doc-sec" id="batch">
+        <h2><span class="meth POST">POST</span> /api/detect/batch</h2>
+        <p>Process up to 10 images in a single request. Returns per-image detection results plus aggregate statistics including total objects, class distribution, and total inference time.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">cURL Example</div>
+          <pre>curl -X POST http://localhost:5000/api/detect/batch \
+  -F "images=@img1.jpg" \
+  -F "images=@img2.jpg" \
+  -F "images=@img3.jpg" \
+  -F "confidence=0.3"</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response 200 OK</div>
+          <pre>{
+  "success": true,
+  "data": {
+    "total_images": 3,
+    "results": [
+      { "original_filename":"img1.jpg", "total_objects":4, "inference_time_ms":5.1, ... },
+      { "original_filename":"img2.jpg", "total_objects":2, "inference_time_ms":4.8, ... }
+    ]
+  }
+}</pre>
+        </div>
+      </div>
+
+      <!-- Classes -->
+      <div class="doc-sec" id="classes">
+        <h2><span class="meth GET">GET</span> /api/classes?search=car</h2>
+        <p>List all 80 COCO class names, optionally filtered by a search query. Returns class IDs and names sorted alphabetically.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response 200 OK</div>
+          <pre>{ "classes": [
+    { "id": 2, "name": "car" },
+    { "id": 7, "name": "truck" }
+  ], "count": 2
+}</pre>
+        </div>
+      </div>
+
+      <!-- Python -->
+      <div class="doc-sec" id="py">
+        <h2>🐍 Python Example</h2>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Python — requests library</div>
+          <pre>import requests
+
+# Single image detection
+with open("photo.jpg", "rb") as f:
+    response = requests.post(
+        "http://localhost:5000/api/detect/image",
+        files={"image": f},
+        data={"confidence": 0.3, "classes": "person,car"}
+    )
+
+data = response.json()["data"]
+print(f"Found {data['total_objects']} objects")
+
+for det in data["detections"]:
+    print(f"  {det['class_name']}: {det['confidence']:.1%}")</pre>
+        </div>
+      </div>
+
+      <!-- JavaScript -->
+      <div class="doc-sec" id="js">
+        <h2>⚡ JavaScript Example</h2>
+        <div class="codeblock">
+          <div class="codeblock-lbl">JavaScript — Fetch API</div>
+          <pre>const fd = new FormData();
+fd.append("image", fileInput.files[0]);
+fd.append("confidence", "0.3");
+fd.append("classes", "person,car,dog");
+
+const response = await fetch("/api/detect/image", {
+  method: "POST",
+  body: fd
+});
+
+const { data } = await response.json();
+console.log(`Detected ${data.total_objects} objects`);
+
+data.detections.forEach(d => {
+  console.log(`${d.class_name}: ${(d.confidence * 100).toFixed(1)}%`);
+});</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <div class="ft-dot" style="background:var(--blue)"></div>
+      <span>ObjectDet.AI v2.0 — API Reference</span>
+    </div>
+    <span>YOLOv8 · COCO 2017 · Flask REST API</span>
+    <span>
+      <a href="https://ultralytics.com/yolov8" target="_blank" class="lnk">YOLOv8 Docs</a>
+      ·
+      <a href="https://cocodataset.org" target="_blank" class="lnk">COCO Dataset</a>
+    </span>
+  </div>
+</footer>
+
+<script src="js/api.js"></script><script src="js/ui.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  UI.setStatus(await API.checkHealth());
+
+  // TOC active highlight on scroll
+  const sections = document.querySelectorAll(".doc-sec");
+  const tocLinks = document.querySelectorAll(".toc-link");
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove("active"));
+        const link = document.querySelector(`.toc-link[href="#${entry.target.id}"]`);
+        if (link) link.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-20% 0px -65% 0px" });
+
+  sections.forEach(s => observer.observe(s));
+});
+</script>
+</body>
+</html>

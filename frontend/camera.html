@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Live Camera — ObjectDet.AI</title>
+<meta name="description" content="Real-time object detection using your webcam. YOLOv8 detects objects in every frame, live."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-radial"></div>
+<div class="scanline"></div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="4" width="15" height="15" rx="3" stroke="url(#lg1c)" stroke-width="1.8"/>
+        <rect x="25" y="4" width="15" height="15" rx="3" stroke="url(#lg2c)" stroke-width="1.8"/>
+        <rect x="4" y="25" width="15" height="15" rx="3" stroke="url(#lg3c)" stroke-width="1.8"/>
+        <rect x="25" y="25" width="15" height="15" rx="3" stroke="url(#lg4c)" stroke-width="1.8"/>
+        <circle cx="22" cy="22" r="5" fill="url(#lgcc)"/>
+        <defs>
+          <linearGradient id="lg1c" x1="4" y1="4" x2="19" y2="19"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+          <linearGradient id="lg2c" x1="25" y1="4" x2="40" y2="19"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+          <linearGradient id="lg3c" x1="4" y1="25" x2="19" y2="40"><stop stop-color="#10b981"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+          <linearGradient id="lg4c" x1="25" y1="25" x2="40" y2="40"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#10b981"/></linearGradient>
+          <linearGradient id="lgcc" x1="17" y1="17" x2="27" y2="27"><stop stop-color="#00d4ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <div class="logo-name">ObjectDet<span style="color:#8b5cf6">.</span>AI</div>
+        <div class="logo-tag">YOLOv8 × COCO-80 × OpenCV</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html"   class="nv">🎯 Detect</a>
+      <a href="camera.html"  class="nv active">📷 Camera</a>
+      <a href="batch.html"   class="nv">📦 Batch</a>
+      <a href="classes.html" class="nv">🗂️ Classes</a>
+      <a href="docs.html"    class="nv">📚 API</a>
+    </nav>
+    <div class="status-pill" id="statusPill">
+      <span class="sdot" id="sdot"></span>
+      <span id="stxt">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<div class="cam-hero-bar">
+  <div class="hero-eyebrow" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);padding:4px 14px;border-radius:2px;text-transform:uppercase;margin-bottom:14px;">
+    ▶ Real-Time Webcam Detection
+  </div>
+  <h1>Live <em>Camera</em> Mode</h1>
+  <p>YOLOv8 detects objects in every frame from your webcam — live, in real-time. Zero latency. 80 classes.</p>
+  <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+    <span class="stat-badge badge-cyan">📷 WebRTC Camera</span>
+    <span class="stat-badge badge-green">⚡ Real-Time</span>
+    <span class="stat-badge badge-purple">🧠 YOLOv8</span>
+  </div>
+</div>
+
+<!-- ══ CAMERA LAYOUT ══ -->
+<div class="cam-layout">
+
+  <!-- Viewport -->
+  <div>
+    <div class="cam-viewport" id="camViewport">
+      <video id="camVideo" autoplay playsinline muted></video>
+      <canvas id="camCanvas"></canvas>
+
+      <div class="cam-hud">
+        <div class="cam-rec" id="recIndicator" style="display:none">
+          <div class="rec-dot"></div>
+          <span>LIVE DETECTION</span>
+        </div>
+        <div class="cam-fps" id="fpsDisplay"></div>
+      </div>
+
+      <div class="snap-flash" id="snapFlash"></div>
+
+      <div class="cam-overlay-msg" id="camOverlay">
+        <div class="cam-icon">📷</div>
+        <h3>Live Camera Detection</h3>
+        <p>Click "Start Camera" to begin real-time object detection using your webcam</p>
+        <button class="cam-btn cam-btn-start" onclick="document.getElementById('startBtn').click()">
+          Start Camera
+        </button>
+      </div>
+
+      <div class="cam-controls">
+        <button class="cam-btn cam-btn-start" id="startBtn">📷 Start Camera</button>
+        <button class="cam-btn cam-btn-stop"  id="stopBtn"  disabled>⏹ Stop</button>
+        <button class="cam-btn cam-btn-snap"  id="snapBtn"  disabled>📸 Snapshot</button>
+        <select id="camSelect" class="txt-in" style="width:auto;padding:7px 12px;border-radius:8px">
+          <option value="">Default Camera</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="error-bar hidden" id="errBar">
+      <span id="errMsg"></span>
+      <button onclick="document.getElementById('errBar').classList.add('hidden')">✕</button>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="cam-panel">
+
+    <div class="cam-stats-card" style="border-top:2px solid var(--cyan)">
+      <h3>Live Statistics</h3>
+      <div class="live-stat"><span class="lsk">STATUS</span>      <span class="lsv" id="lsStatus">IDLE</span></div>
+      <div class="live-stat"><span class="lsk">FPS</span>         <span class="lsv" id="lsFPS">—</span></div>
+      <div class="live-stat"><span class="lsk">OBJECTS</span>     <span class="lsv" id="lsObjects">0</span></div>
+      <div class="live-stat"><span class="lsk">LATENCY</span>     <span class="lsv" id="lsLatency">—</span></div>
+      <div class="live-stat"><span class="lsk">TOTAL FRAMES</span><span class="lsv" id="lsFrames">0</span></div>
+      <div class="live-stat"><span class="lsk">MODEL</span>       <span class="lsv" id="lsModel" style="color:var(--purple)">yolov8n</span></div>
+    </div>
+
+    <div class="cam-settings" style="border-top:2px solid var(--purple)">
+      <h3>Detection Settings</h3>
+      <div class="sg">
+        <label>Confidence <span class="sv" id="camConfV">0.25</span></label>
+        <input type="range" id="camConf" min="0.05" max="0.9" step="0.05" value="0.25" class="slider"/>
+      </div>
+      <div class="sg" style="margin-top:14px">
+        <label>IOU Threshold <span class="sv" id="camIouV">0.45</span></label>
+        <input type="range" id="camIou" min="0.1" max="0.9" step="0.05" value="0.45" class="slider"/>
+      </div>
+      <div class="sg" style="margin-top:14px">
+        <label>Frame Rate</label>
+        <select id="fpsSelect" class="txt-in" style="border-radius:8px">
+          <option value="5">5 FPS (slow CPU)</option>
+          <option value="10" selected>10 FPS (balanced)</option>
+          <option value="15">15 FPS (fast GPU)</option>
+          <option value="24">24 FPS (max)</option>
+        </select>
+      </div>
+      <div class="sg" style="margin-top:14px">
+        <label>Filter Classes</label>
+        <input type="text" id="camClsFilter" placeholder="person, car, dog…" class="txt-in" style="border-radius:8px"/>
+      </div>
+    </div>
+
+    <div class="cam-stats-card" style="border-top:2px solid var(--green)">
+      <h3>Detected Objects</h3>
+      <div class="live-det-list" id="liveDets">
+        <div style="font-size:11px;color:var(--txt3);font-family:var(--mono)">No detections yet…</div>
+      </div>
+      <div class="mini-chart" id="miniChart"></div>
+    </div>
+
+    <div class="snaps-card" style="border-top:2px solid var(--orange)">
+      <h3>Snapshots</h3>
+      <div class="snaps-strip" id="snapsStrip">
+        <span class="no-snaps">Press 📸 to capture</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <div class="ft-dot" style="background:var(--green)"></div>
+      <span>ObjectDet.AI v2.0 — Live Camera Detection</span>
+    </div>
+    <span>YOLOv8 · COCO 2017 · WebRTC · Flask API</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/camera.js"></script>
+</body>
+</html>
