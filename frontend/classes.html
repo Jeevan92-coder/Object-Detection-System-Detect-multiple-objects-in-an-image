@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Classes — ObjectDet.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-radial"></div><div class="scanline"></div>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none">
+        <rect x="2"  y="2"  width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="25" y="2"  width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="2"  y="25" width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="25" y="25" width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <circle cx="22" cy="22" r="5" fill="#00e5ff"/>
+        <circle cx="22" cy="22" r="2" fill="#000"/>
+      </svg>
+      <div>
+        <div class="logo-name">ObjectDet<span class="c-acc">.</span>AI</div>
+        <div class="logo-tag">YOLOv8 × COCO-80 × OpenCV</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html"   class="nv">⬡ Detect</a>
+      <a href="camera.html"  class="nv">📷 Camera</a>
+      <a href="batch.html"   class="nv">⊞ Batch</a>
+      <a href="classes.html" class="nv active">⊙ Classes</a>
+      <a href="docs.html"    class="nv">⌗ API</a>
+    </nav>
+    <div class="status-pill">
+      <span class="sdot" id="sdot"></span>
+      <span id="stxt">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">COCO 80-Class Reference</div>
+    <h1 class="hero-h1">All <em>80</em> Classes</h1>
+    <p class="hero-p">Browse, filter, and select every object class detectable by YOLOv8 trained on the COCO 2017 dataset. Click any class to create a detection filter.</p>
+    <div class="hero-chips">
+      <div class="chip"><span>80</span> Total Classes</div>
+      <div class="chip"><span>330K</span> Train Images</div>
+      <div class="chip"><span>1.5M</span> Instances</div>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="hm-row"><span class="hm-k">DATASET</span><span class="hm-v" style="font-size:11px">COCO 2017</span></div>
+    <div class="hm-row"><span class="hm-k">CLASSES</span><span class="hm-v">80</span></div>
+    <div class="hm-row"><span class="hm-k">CATEGORIES</span><span class="hm-v">8</span></div>
+  </div>
+</section>
+
+<main class="wrap">
+  <section class="card">
+    <div class="card-hdr">
+      <span class="tag">COCO</span>
+      <h2>Class Explorer</h2>
+      <input type="text" id="search" placeholder="🔍  Search classes…" class="txt-in" style="width:200px;margin-left:auto;border-radius:0"/>
+    </div>
+
+    <div class="cat-tabs" id="tabs"></div>
+    <div class="cls-grid" id="grid"></div>
+
+    <div id="selBar" style="display:none;margin-top:14px;padding:11px 16px;background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.18);align-items:center;gap:12px;flex-wrap:wrap">
+      <span id="selCount" style="font-family:var(--mono);font-size:12px;color:var(--txt2)">0 selected</span>
+      <button class="sm-btn" id="useBtn">Use as Filter →</button>
+      <button class="sm-btn" id="clrBtn">Clear All</button>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="ft-inner">
+    <span>ObjectDet.AI v2.0</span>
+    <span>COCO Dataset: 80 classes · 330K images · 1.5M instances</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="js/api.js"></script><script src="js/ui.js"></script>
+<script>
+const CATS = {
+  "All": [],
+  "👤 People":    ["person"],
+  "🚗 Vehicles":  ["bicycle","car","motorcycle","airplane","bus","train","truck","boat"],
+  "🚦 Traffic":   ["traffic light","fire hydrant","stop sign","parking meter"],
+  "🐾 Animals":   ["bird","cat","dog","horse","sheep","cow","elephant","bear","zebra","giraffe"],
+  "🎒 Accessories":["backpack","umbrella","handbag","tie","suitcase"],
+  "⚽ Sports":    ["frisbee","skis","snowboard","sports ball","kite","baseball bat","baseball glove","skateboard","surfboard","tennis racket"],
+  "🍎 Food":      ["bottle","wine glass","cup","fork","knife","spoon","bowl","banana","apple","sandwich","orange","broccoli","carrot","hot dog","pizza","donut","cake"],
+  "🏠 Indoor":    ["chair","couch","potted plant","bed","dining table","toilet","tv","laptop","mouse","remote","keyboard","cell phone","microwave","oven","toaster","sink","refrigerator","book","clock","vase","scissors","teddy bear","hair drier","toothbrush"],
+};
+const ALL = ["person","bicycle","car","motorcycle","airplane","bus","train","truck","boat","traffic light","fire hydrant","stop sign","parking meter","bench","bird","cat","dog","horse","sheep","cow","elephant","bear","zebra","giraffe","backpack","umbrella","handbag","tie","suitcase","frisbee","skis","snowboard","sports ball","kite","baseball bat","baseball glove","skateboard","surfboard","tennis racket","bottle","wine glass","cup","fork","knife","spoon","bowl","banana","apple","sandwich","orange","broccoli","carrot","hot dog","pizza","donut","cake","chair","couch","potted plant","bed","dining table","toilet","tv","laptop","mouse","remote","keyboard","cell phone","microwave","oven","toaster","sink","refrigerator","book","clock","vase","scissors","teddy bear","hair drier","toothbrush"];
+const idMap = {}; ALL.forEach((n, i) => idMap[n] = i);
+let sel = new Set(), cat = "All", q = "";
+
+const tabs    = document.getElementById("tabs");
+const grid    = document.getElementById("grid");
+const search  = document.getElementById("search");
+const selBar  = document.getElementById("selBar");
+const selCount= document.getElementById("selCount");
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const ok = await API.checkHealth(); UI.setStatus(ok);
+
+  Object.keys(CATS).forEach(c => {
+    const b = document.createElement("button");
+    b.className = "ctab" + (c === "All" ? " act" : "");
+    b.textContent = c === "All" ? `All (${ALL.length})` : c;
+    b.onclick = () => {
+      cat = c;
+      document.querySelectorAll(".ctab").forEach(x => x.classList.remove("act"));
+      b.classList.add("act");
+      render();
+    };
+    tabs.appendChild(b);
+  });
+
+  search.addEventListener("input", () => { q = search.value.toLowerCase(); render(); });
+  render();
+
+  document.getElementById("useBtn").onclick = () => {
+    sessionStorage.setItem("ods_class_filter", [...sel].join(", "));
+    UI.toast("Filter set — going to detect…", "ok");
+    setTimeout(() => location.href = "index.html", 1200);
+  };
+  document.getElementById("clrBtn").onclick = () => { sel.clear(); updateSel(); render(); };
+});
+
+function render() {
+  let cls = cat === "All" ? [...ALL] : (CATS[cat] || []);
+  if (q) cls = cls.filter(n => n.includes(q));
+  grid.innerHTML = cls.map(n => {
+    const id = idMap[n]; const c = UI.color(id); const s = sel.has(n);
+    return `<div class="cls-card${s ? " sel" : ""}" data-n="${n}" style="${s ? `border-color:${c};background:${c}18` : ""}">
+      <div class="cls-id">#${String(id).padStart(2, "0")}</div>
+      <div class="cls-name" style="color:${c}">${n}</div>
+    </div>`;
+  }).join("");
+
+  grid.querySelectorAll(".cls-card").forEach(c => {
+    c.onclick = () => {
+      const n = c.dataset.n;
+      sel.has(n) ? sel.delete(n) : sel.add(n);
+      updateSel(); render();
+    };
+  });
+}
+
+function updateSel() {
+  selBar.style.display = sel.size === 0 ? "none" : "flex";
+  selCount.textContent = `${sel.size} class${sel.size > 1 ? "es" : ""} selected`;
+}
+</script>
+</body>
+</html>

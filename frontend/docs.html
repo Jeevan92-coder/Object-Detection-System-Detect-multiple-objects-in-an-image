@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>API Docs — ObjectDet.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-radial"></div><div class="scanline"></div>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none">
+        <rect x="2"  y="2"  width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="25" y="2"  width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="2"  y="25" width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="25" y="25" width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <circle cx="22" cy="22" r="5" fill="#00e5ff"/>
+        <circle cx="22" cy="22" r="2" fill="#000"/>
+      </svg>
+      <div>
+        <div class="logo-name">ObjectDet<span class="c-acc">.</span>AI</div>
+        <div class="logo-tag">YOLOv8 × COCO-80 × OpenCV</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html"   class="nv">⬡ Detect</a>
+      <a href="camera.html"  class="nv">📷 Camera</a>
+      <a href="batch.html"   class="nv">⊞ Batch</a>
+      <a href="classes.html" class="nv">⊙ Classes</a>
+      <a href="docs.html"    class="nv active">⌗ API</a>
+    </nav>
+    <div class="status-pill">
+      <span class="sdot" id="sdot"></span>
+      <span id="stxt">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">REST API Reference v2.0</div>
+    <h1 class="hero-h1">API <em>Docs</em></h1>
+    <p class="hero-p">Complete endpoint reference — including the live camera frame endpoint new in v2. Base URL: <code>http://localhost:5000</code>. All endpoints prefixed with <code>/api</code>.</p>
+    <div class="hero-chips">
+      <div class="chip"><span>5</span> Endpoints</div>
+      <div class="chip"><span>JSON</span> Response</div>
+      <div class="chip"><span>REST</span> API</div>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="hm-row"><span class="hm-k">BASE URL</span><span class="hm-v" style="font-size:10px">:5000</span></div>
+    <div class="hm-row"><span class="hm-k">VERSION</span><span class="hm-v">v2.0</span></div>
+    <div class="hm-row"><span class="hm-k">FORMAT</span><span class="hm-v">JSON</span></div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="card docs-layout">
+
+    <!-- TOC -->
+    <nav class="doc-toc">
+      <h3>Endpoints</h3>
+      <ul>
+        <li><a href="#health">GET /health</a></li>
+        <li><a href="#info">GET /info</a></li>
+        <li><a href="#image">POST /detect/image</a></li>
+        <li><a href="#frame">POST /detect/frame</a></li>
+        <li><a href="#batch">POST /detect/batch</a></li>
+        <li><a href="#classes">GET /classes</a></li>
+        <li><a href="#py">Python Example</a></li>
+        <li><a href="#js">JS Example</a></li>
+      </ul>
+    </nav>
+
+    <!-- Content -->
+    <div>
+
+      <div class="doc-sec" id="health">
+        <h2><span class="meth GET">GET</span> /api/health</h2>
+        <p>Service health check. Returns model info and device status.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response</div>
+          <pre>{ "status":"healthy", "model":"yolov8n.pt", "device":"cpu", "classes":80 }</pre>
+        </div>
+      </div>
+
+      <div class="doc-sec" id="info">
+        <h2><span class="meth GET">GET</span> /api/info</h2>
+        <p>Returns model configuration, supported input formats, and the full list of class names.</p>
+      </div>
+
+      <div class="doc-sec" id="image">
+        <h2><span class="meth POST">POST</span> /api/detect/image</h2>
+        <p>Detect objects in a single uploaded image. Returns annotated result image URL and detection data.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Form Fields</div>
+          <pre>image       File    required  JPG/PNG/BMP/WEBP
+confidence  float   optional  default 0.25
+iou         float   optional  default 0.45
+classes     string  optional  comma-separated class filter</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">cURL</div>
+          <pre>curl -X POST http://localhost:5000/api/detect/image \
+  -F "image=@photo.jpg" -F "confidence=0.3"</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response</div>
+          <pre>{ "success": true, "data": {
+  "total_objects": 3,
+  "detections": [{
+    "class_id": 0, "class_name": "person",
+    "confidence": 0.91,
+    "bbox": {"x1":100,"y1":50,"x2":250,"y2":400},
+    "area_px": 52500, "center": {"x":175,"y":225}
+  }],
+  "class_summary": {"person":2,"car":1},
+  "result_image_url": "/api/results/result_abc.jpg",
+  "inference_time_ms": 4.7
+}}</pre>
+        </div>
+      </div>
+
+      <div class="doc-sec" id="frame">
+        <h2><span class="meth POST">POST</span> /api/detect/frame</h2>
+        <p>⭐ <strong>New in v2</strong> — For live camera: send a base64-encoded JPEG frame, get back detections + annotated frame as base64. Designed for low-latency webcam integration.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">JSON Body</div>
+          <pre>{
+  "frame":      "data:image/jpeg;base64,/9j/4AAQ...",
+  "confidence": 0.25,
+  "iou":        0.45,
+  "classes":    ["person","car"]  // optional filter
+}</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Response</div>
+          <pre>{ "success": true, "data": {
+  "total_objects": 2,
+  "detections":    [...],
+  "class_summary": {"person":1,"car":1},
+  "frame_b64":     "/9j/4AAQ...",  // annotated JPEG
+  "image_size":    {"width":1280,"height":720}
+}}</pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock-lbl">JavaScript (browser webcam)</div>
+          <pre>// Capture frame from video element
+offCanvas.drawImage(video, 0, 0, w, h);
+const b64 = offCanvas.toDataURL("image/jpeg", 0.6);
+
+const res = await fetch("/api/detect/frame", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ frame: b64, confidence: 0.25 })
+});
+const { data } = await res.json();
+
+// Draw annotated frame back onto visible canvas
+const img = new Image();
+img.src = "data:image/jpeg;base64," + data.frame_b64;
+img.onload = () => ctx.drawImage(img, 0, 0);</pre>
+        </div>
+      </div>
+
+      <div class="doc-sec" id="batch">
+        <h2><span class="meth POST">POST</span> /api/detect/batch</h2>
+        <p>Process up to 10 images in a single request. Returns per-image results plus aggregate stats.</p>
+        <div class="codeblock">
+          <div class="codeblock-lbl">cURL</div>
+          <pre>curl -X POST http://localhost:5000/api/detect/batch \
+  -F "images=@img1.jpg" \
+  -F "images=@img2.jpg" \
+  -F "confidence=0.3"</pre>
+        </div>
+      </div>
+
+      <div class="doc-sec" id="classes">
+        <h2><span class="meth GET">GET</span> /api/classes?search=car</h2>
+        <p>List all COCO 80 classes, optionally filtered by a search query.</p>
+      </div>
+
+      <div class="doc-sec" id="py">
+        <h2>Python Example</h2>
+        <div class="codeblock">
+          <div class="codeblock-lbl">Python</div>
+          <pre>import requests
+
+with open("photo.jpg", "rb") as f:
+    r = requests.post(
+        "http://localhost:5000/api/detect/image",
+        files={"image": f},
+        data={"confidence": 0.3}
+    )
+
+for det in r.json()["data"]["detections"]:
+    print(f"{det['class_name']}: {det['confidence']:.1%}")</pre>
+        </div>
+      </div>
+
+      <div class="doc-sec" id="js">
+        <h2>JavaScript Example</h2>
+        <div class="codeblock">
+          <div class="codeblock-lbl">JavaScript</div>
+          <pre>const fd = new FormData();
+fd.append("image", fileInput.files[0]);
+fd.append("confidence", "0.3");
+
+const r = await fetch("/api/detect/image", {
+  method: "POST",
+  body: fd
+});
+const { data } = await r.json();
+
+data.detections.forEach(d => {
+  console.log(d.class_name, (d.confidence * 100).toFixed(1) + "%");
+});</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="ft-inner">
+    <span>ObjectDet.AI v2.0 — API Reference</span>
+    <span>YOLOv8 · COCO 2017 · Flask REST API</span>
+  </div>
+</footer>
+
+<script src="js/api.js"></script><script src="js/ui.js"></script>
+<script>document.addEventListener("DOMContentLoaded", async () => { UI.setStatus(await API.checkHealth()); });</script>
+</body>
+</html>

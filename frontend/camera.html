@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Live Camera — ObjectDet.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+<style>
+/* ── Camera-specific ─────────────────────────────── */
+.cam-layout {
+  display: grid; grid-template-columns: 1fr 300px; gap: 14px;
+  max-width: 1440px; margin: 0 auto; padding: 0 28px 60px;
+  position: relative; z-index: 2;
+}
+@media(max-width:900px) { .cam-layout { grid-template-columns: 1fr; } }
+
+.cam-viewport {
+  position: relative; background: #000;
+  overflow: hidden; border: 1px solid var(--ln);
+  aspect-ratio: 16/9; min-height: 380px;
+}
+#camVideo  { width:100%; height:100%; object-fit:cover; display:block; }
+#camCanvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:2; }
+
+.cam-hud {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(180deg,rgba(0,0,0,.72) 0%,transparent 100%);
+  z-index: 5; pointer-events: none;
+}
+.cam-rec {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 11px; color: #fff;
+}
+.rec-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #ef4444; animation: recblink 1s ease infinite;
+}
+@keyframes recblink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.cam-fps { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,.65); }
+
+.cam-overlay-msg {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px;
+  background: rgba(0,0,0,.75); z-index: 6; text-align: center; padding: 24px;
+}
+.cam-overlay-msg .cam-icon { font-size: 48px; }
+.cam-overlay-msg h3 { font-size: 18px; font-weight: 700; }
+.cam-overlay-msg p  { font-size: 13px; color: var(--txt2); max-width: 280px; }
+
+.snap-flash {
+  position: absolute; inset: 0; background: #fff;
+  opacity: 0; pointer-events: none; z-index: 10;
+  transition: opacity .1s;
+}
+.snap-flash.flash { opacity: .55; }
+
+.cam-controls {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px;
+  background: linear-gradient(0deg,rgba(0,0,0,.82) 0%,transparent 100%);
+  z-index: 5;
+}
+.cam-btn {
+  padding: 9px 22px; font-size: 13px; font-weight: 700;
+  font-family: var(--mono); cursor: pointer; border: none;
+  transition: all .22s; letter-spacing: .5px; border-radius: 0;
+}
+.cam-btn-start  { background: var(--acc); color: #000; }
+.cam-btn-start:hover { box-shadow: 0 0 22px rgba(0,229,255,.5); }
+.cam-btn-stop   { background: var(--red); color: #fff; }
+.cam-btn-snap   { background: var(--bg3); border: 1px solid var(--ln2); color: var(--txt); }
+.cam-btn-snap:hover { border-color: var(--acc); color: var(--acc); }
+.cam-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+/* Panel */
+.cam-panel { display: flex; flex-direction: column; gap: 12px; }
+.cam-stats-card {
+  background: var(--bg2); border: 1px solid var(--ln);
+  padding: 18px; position: relative;
+}
+.cam-stats-card::before {
+  content: ''; position: absolute; top: -1px; left: -1px;
+  width: 14px; height: 14px;
+  border-top: 2px solid var(--acc); border-left: 2px solid var(--acc);
+}
+.cam-stats-card h3 {
+  font-family: var(--mono); font-size: 8.5px; color: var(--txt3);
+  letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 13px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--ln);
+}
+.live-stat {
+  display: flex; justify-content: space-between; padding: 7px 0;
+  border-bottom: 1px solid var(--ln); font-size: 12px;
+}
+.live-stat:last-child { border: none; }
+.live-stat .lsk { color: var(--txt3); font-family: var(--mono); font-size: 10px; letter-spacing: .5px; }
+.live-stat .lsv { color: var(--acc); font-family: var(--mono); font-weight: 700; font-size: 12px; }
+
+.live-det-list {
+  display: flex; flex-direction: column; gap: 5px;
+  max-height: 260px; overflow-y: auto; margin-top: 4px;
+}
+.live-det-item {
+  display: flex; align-items: center; gap: 10px; padding: 7px 11px;
+  background: var(--bg3); border: 1px solid var(--ln);
+  border-left: 2px solid var(--acc);
+  animation: slideIn .2s ease;
+}
+@keyframes slideIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:none} }
+.ldi-name { font-size: 12px; font-weight: 700; flex: 1; }
+.ldi-conf { font-family: var(--mono); font-size: 10.5px; color: var(--acc); }
+
+.cam-settings {
+  background: var(--bg2); border: 1px solid var(--ln);
+  padding: 18px; position: relative;
+}
+.cam-settings::before {
+  content: ''; position: absolute; top: -1px; left: -1px;
+  width: 14px; height: 14px;
+  border-top: 2px solid var(--acc); border-left: 2px solid var(--acc);
+}
+.cam-settings h3 {
+  font-family: var(--mono); font-size: 8.5px; color: var(--txt3);
+  letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 13px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--ln);
+}
+
+.snaps-card {
+  background: var(--bg2); border: 1px solid var(--ln); padding: 18px;
+  position: relative;
+}
+.snaps-card::before {
+  content: ''; position: absolute; top: -1px; left: -1px;
+  width: 14px; height: 14px;
+  border-top: 2px solid var(--acc); border-left: 2px solid var(--acc);
+}
+.snaps-card h3 {
+  font-family: var(--mono); font-size: 8.5px; color: var(--txt3);
+  letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 12px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--ln);
+}
+.snaps-strip { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; }
+.snap-thumb {
+  flex-shrink: 0; width: 78px; height: 54px; object-fit: cover;
+  border: 1px solid var(--ln2); cursor: pointer; transition: border-color .2s;
+}
+.snap-thumb:hover { border-color: var(--acc); }
+.no-snaps { font-size: 11px; color: var(--txt3); font-family: var(--mono); }
+
+.mini-chart { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+.mc-row { display: flex; align-items: center; gap: 8px; font-size: 10.5px; font-family: var(--mono); }
+.mc-name { color: var(--txt2); min-width: 80px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mc-track { flex: 1; height: 12px; background: var(--bg3); overflow: hidden; border: 1px solid var(--ln); }
+.mc-fill  { height: 100%; transition: width .5s ease; }
+.mc-cnt   { color: var(--txt3); min-width: 20px; }
+
+.cam-hero-bar {
+  position: relative; z-index: 2;
+  max-width: 1440px; margin: 0 auto;
+  padding: 36px 28px 20px;
+}
+.cam-hero-bar .hero-eyebrow { font-family: var(--mono); font-size: 9px; letter-spacing: 4px; color: var(--acc); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.cam-hero-bar .hero-eyebrow::before { content: '//'; color: var(--txt3); }
+.cam-hero-bar h1 { font-size: clamp(28px,5vw,54px); font-weight: 800; letter-spacing: -2px; }
+.cam-hero-bar h1 em { color: var(--acc); font-style: normal; }
+.cam-hero-bar p { font-size: 13px; color: var(--txt2); margin-top: 8px; max-width: 480px; }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-radial"></div>
+<div class="scanline"></div>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none">
+        <rect x="2"  y="2"  width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="25" y="2"  width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="2"  y="25" width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="25" y="25" width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <circle cx="22" cy="22" r="5" fill="#00e5ff"/>
+        <circle cx="22" cy="22" r="2" fill="#000"/>
+      </svg>
+      <div>
+        <div class="logo-name">ObjectDet<span class="c-acc">.</span>AI</div>
+        <div class="logo-tag">YOLOv8 × COCO-80 × OpenCV</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html"   class="nv">⬡ Detect</a>
+      <a href="camera.html"  class="nv active">📷 Camera</a>
+      <a href="batch.html"   class="nv">⊞ Batch</a>
+      <a href="classes.html" class="nv">⊙ Classes</a>
+      <a href="docs.html"    class="nv">⌗ API</a>
+    </nav>
+    <div class="status-pill" id="statusPill">
+      <span class="sdot" id="sdot"></span>
+      <span id="stxt">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<div class="cam-hero-bar">
+  <div class="hero-eyebrow">Real-Time Webcam Detection</div>
+  <h1>Live <em>Camera</em> Mode</h1>
+  <p>YOLOv8 detects objects in every frame from your webcam — live, in real-time</p>
+</div>
+
+<div class="cam-layout">
+
+  <!-- Viewport -->
+  <div>
+    <div class="cam-viewport" id="camViewport">
+      <video id="camVideo" autoplay playsinline muted></video>
+      <canvas id="camCanvas"></canvas>
+
+      <div class="cam-hud">
+        <div class="cam-rec" id="recIndicator" style="display:none">
+          <div class="rec-dot"></div>
+          <span>LIVE DETECTION</span>
+        </div>
+        <div class="cam-fps" id="fpsDisplay"></div>
+      </div>
+
+      <div class="snap-flash" id="snapFlash"></div>
+
+      <div class="cam-overlay-msg" id="camOverlay">
+        <div class="cam-icon">📷</div>
+        <h3>Live Camera Detection</h3>
+        <p>Click "Start Camera" to begin real-time object detection using your webcam</p>
+        <button class="cam-btn cam-btn-start" onclick="document.getElementById('startBtn').click()">
+          Start Camera
+        </button>
+      </div>
+
+      <div class="cam-controls">
+        <button class="cam-btn cam-btn-start" id="startBtn">📷 Start Camera</button>
+        <button class="cam-btn cam-btn-stop"  id="stopBtn"  disabled>⏹ Stop</button>
+        <button class="cam-btn cam-btn-snap"  id="snapBtn"  disabled>📸 Snapshot</button>
+        <select id="camSelect" class="txt-in" style="width:auto;padding:7px 12px;border-radius:0">
+          <option value="">Default Camera</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="error-bar hidden" id="errBar">
+      <span id="errMsg"></span>
+      <button onclick="document.getElementById('errBar').classList.add('hidden')">✕</button>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="cam-panel">
+
+    <div class="cam-stats-card">
+      <h3>Live Statistics</h3>
+      <div class="live-stat"><span class="lsk">STATUS</span>      <span class="lsv" id="lsStatus">IDLE</span></div>
+      <div class="live-stat"><span class="lsk">FPS</span>         <span class="lsv" id="lsFPS">—</span></div>
+      <div class="live-stat"><span class="lsk">OBJECTS</span>     <span class="lsv" id="lsObjects">0</span></div>
+      <div class="live-stat"><span class="lsk">LATENCY</span>     <span class="lsv" id="lsLatency">—</span></div>
+      <div class="live-stat"><span class="lsk">TOTAL FRAMES</span><span class="lsv" id="lsFrames">0</span></div>
+      <div class="live-stat"><span class="lsk">MODEL</span>       <span class="lsv" id="lsModel">yolov8n</span></div>
+    </div>
+
+    <div class="cam-settings">
+      <h3>Detection Settings</h3>
+      <div class="sg">
+        <label>Confidence <span class="sv" id="camConfV">0.25</span></label>
+        <input type="range" id="camConf" min="0.05" max="0.9" step="0.05" value="0.25" class="slider"/>
+      </div>
+      <div class="sg" style="margin-top:12px">
+        <label>IOU Threshold <span class="sv" id="camIouV">0.45</span></label>
+        <input type="range" id="camIou" min="0.1" max="0.9" step="0.05" value="0.45" class="slider"/>
+      </div>
+      <div class="sg" style="margin-top:12px">
+        <label>Frame Rate</label>
+        <select id="fpsSelect" class="txt-in" style="border-radius:0">
+          <option value="5">5 FPS (slow CPU)</option>
+          <option value="10" selected>10 FPS (balanced)</option>
+          <option value="15">15 FPS (fast GPU)</option>
+          <option value="24">24 FPS (max)</option>
+        </select>
+      </div>
+      <div class="sg" style="margin-top:12px">
+        <label>Filter Classes</label>
+        <input type="text" id="camClsFilter" placeholder="person, car, dog…" class="txt-in" style="border-radius:0"/>
+      </div>
+    </div>
+
+    <div class="cam-stats-card">
+      <h3>Detected Objects</h3>
+      <div class="live-det-list" id="liveDets">
+        <div style="font-size:11px;color:var(--txt3);font-family:var(--mono)">No detections yet…</div>
+      </div>
+      <div class="mini-chart" id="miniChart"></div>
+    </div>
+
+    <div class="snaps-card">
+      <h3>Snapshots</h3>
+      <div class="snaps-strip" id="snapsStrip">
+        <span class="no-snaps">Press 📸 to capture</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="ft-inner">
+    <span>ObjectDet.AI v2.0 — Live Camera Detection</span>
+    <span>YOLOv8 · COCO 2017 · WebRTC · Flask API</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/camera.js"></script>
+</body>
+</html>

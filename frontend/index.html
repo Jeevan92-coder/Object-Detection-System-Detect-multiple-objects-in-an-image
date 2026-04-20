@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ObjectDet.AI — Real-Time Object Detection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-radial"></div>
+<div class="scanline"></div>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none">
+        <rect x="2"  y="2"  width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="25" y="2"  width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="2"  y="25" width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="25" y="25" width="17" height="17" stroke="#00e5ff" stroke-width="1.5"/>
+        <circle cx="22" cy="22" r="5" fill="#00e5ff"/>
+        <circle cx="22" cy="22" r="2" fill="#000"/>
+      </svg>
+      <div>
+        <div class="logo-name">ObjectDet<span class="c-acc">.</span>AI</div>
+        <div class="logo-tag">YOLOv8 × COCO-80 × OpenCV</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html"   class="nv active">⬡ Detect</a>
+      <a href="camera.html"  class="nv">📷 Camera</a>
+      <a href="batch.html"   class="nv">⊞ Batch</a>
+      <a href="classes.html" class="nv">⊙ Classes</a>
+      <a href="docs.html"    class="nv">⌗ API</a>
+    </nav>
+    <div class="status-pill" id="statusPill">
+      <span class="sdot" id="sdot"></span>
+      <span id="stxt">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ═════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Real-Time Object Detection System</div>
+    <h1 class="hero-h1">Detect <em>Anything</em><br>Instantly</h1>
+    <p class="hero-p">Upload an image or use your live camera — YOLOv8 finds every object in milliseconds using COCO-trained neural networks</p>
+    <div class="hero-chips">
+      <div class="chip"><span id="cChip">80</span> COCO Classes</div>
+      <div class="chip"><span>~5ms</span> Inference</div>
+      <div class="chip"><span>mAP 37.3</span> COCO Val</div>
+      <div class="chip chip-live" onclick="window.location='camera.html'">📷 Live Camera →</div>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="hm-row"><span class="hm-k">MODEL</span><span class="hm-v">YOLOv8n</span></div>
+    <div class="hm-row"><span class="hm-k">CLASSES</span><span class="hm-v" id="cChip2">80</span></div>
+    <div class="hm-row"><span class="hm-k">INFERENCE</span><span class="hm-v">~5ms</span></div>
+    <div class="hm-row"><span class="hm-k">mAP@.5</span><span class="hm-v">52.4</span></div>
+  </div>
+</section>
+
+<!-- ══ MAIN ═════════════════════════════════════════════════ -->
+<main class="wrap">
+
+  <div class="mode-tabs">
+    <button class="mtab active" id="tabUpload" onclick="switchMode('upload')">
+      <span>🖼</span> Image Upload
+    </button>
+    <button class="mtab" id="tabCamera" onclick="window.location='camera.html'">
+      <span>📷</span> Live Camera
+    </button>
+  </div>
+
+  <div class="grid-2">
+
+    <!-- INPUT PANEL -->
+    <section class="card" id="uploadCard">
+      <div class="card-hdr">
+        <span class="tag">INPUT</span>
+        <h2>Upload Image</h2>
+      </div>
+
+      <div class="dropzone" id="dz">
+        <div class="dz-idle" id="dzIdle">
+          <div class="dz-icon">
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M8 48V16a4 4 0 014-4h40a4 4 0 014 4v32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M2 48h60M20 28l12-12 12 12M32 16v24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="dz-title">Drop image here or <span class="lnk" id="dzBrowse">browse</span></p>
+          <p class="dz-hint">JPG · PNG · BMP · WEBP · Max 50 MB</p>
+          <p class="dz-hint" style="margin-top:4px;color:var(--acc)">💡 Or try <a href="camera.html" style="color:var(--acc)">Live Camera →</a></p>
+        </div>
+        <div class="dz-preview hidden" id="dzPreview">
+          <img id="prevImg" alt="preview"/>
+          <button class="clr-btn" id="clearBtn">✕ Clear</button>
+        </div>
+        <input type="file" id="fileIn" accept="image/*" class="hidden"/>
+      </div>
+
+      <div class="settings">
+        <div class="sg">
+          <label>Confidence Threshold <span class="sv" id="confV">0.25</span></label>
+          <input type="range" id="confS" min="0.05" max="0.95" step="0.05" value="0.25" class="slider"/>
+        </div>
+        <div class="sg">
+          <label>IOU Threshold <span class="sv" id="iouV">0.45</span></label>
+          <input type="range" id="iouS"  min="0.1"  max="0.9"  step="0.05" value="0.45" class="slider"/>
+        </div>
+        <div class="sg full">
+          <label>Filter Classes <span class="hint-txt" style="font-weight:400;color:var(--txt3)">(comma separated, blank = all)</span></label>
+          <input type="text" id="clsFilter" placeholder="e.g. person, car, dog" class="txt-in"/>
+        </div>
+      </div>
+
+      <button class="run-btn" id="runBtn" disabled>
+        <span id="runIcon">▶</span>
+        <span id="runLabel">Run Detection</span>
+        <div class="ring hidden" id="ring"></div>
+      </button>
+    </section>
+
+    <!-- OUTPUT PANEL -->
+    <section class="card" id="resultCard">
+      <div class="card-hdr">
+        <span class="tag">OUTPUT</span>
+        <h2>Detection Results</h2>
+        <div class="card-actions hidden" id="actions">
+          <button class="sm-btn" id="dlBtn">⬇ Save</button>
+          <button class="sm-btn" id="jsonBtn">{ } JSON</button>
+        </div>
+      </div>
+
+      <div class="empty" id="emptyState">
+        <div class="empty-icon">🔍</div>
+        <p>Upload an image and run detection</p>
+        <p class="empty-sub">— or use <a href="camera.html" class="lnk">Live Camera</a> for real-time detection</p>
+      </div>
+
+      <div class="hidden" id="resultWrap">
+        <div class="res-img-wrap">
+          <img id="resImg" alt="result"/>
+          <div class="img-hud" id="imgHud"></div>
+        </div>
+        <div class="metrics" id="metrics"></div>
+        <div class="class-pills" id="classPills"></div>
+        <div class="tbl-wrap">
+          <table class="dtbl" id="dtbl">
+            <thead>
+              <tr><th>#</th><th>Object</th><th>Confidence</th><th>Bounding Box</th><th>Area</th></tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="chart" id="chart"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- DATASET SECTION -->
+  <section class="card dataset-card">
+    <div class="card-hdr">
+      <span class="tag">DATASET</span>
+      <h2>COCO Dataset — Setup Guide</h2>
+    </div>
+    <div class="ds-grid">
+      <div class="ds-block">
+        <div class="ds-step">STEP 01</div>
+        <div class="ds-title">Download COCO 2017</div>
+        <div class="ds-code">python scripts/download_coco.py --split val --samples 100</div>
+        <div class="ds-desc">Downloads annotations + 100 validation images (~50 MB) for quick testing</div>
+      </div>
+      <div class="ds-block">
+        <div class="ds-step">STEP 02</div>
+        <div class="ds-title">Folder Structure</div>
+        <pre class="ds-tree">object-detection-system/
+└── data/
+    └── coco/                ← <span class="c-acc">place here</span>
+        ├── images/
+        │   ├── train2017/
+        │   └── val2017/
+        └── annotations/
+            ├── instances_train2017.json
+            └── instances_val2017.json</pre>
+      </div>
+      <div class="ds-block">
+        <div class="ds-step">STEP 03</div>
+        <div class="ds-title">Run Evaluation</div>
+        <div class="ds-code">python scripts/evaluate_coco.py --split val</div>
+        <div class="ds-desc">Computes mAP@0.5, mAP@0.5:0.95 and per-class AP on COCO validation set</div>
+      </div>
+      <div class="ds-block">
+        <div class="ds-step">MANUAL</div>
+        <div class="ds-title">Official Download</div>
+        <div class="ds-desc">
+          Visit <a href="https://cocodataset.org/#download" target="_blank" class="lnk">cocodataset.org/#download</a><br>
+          → val2017.zip (~1 GB) for images<br>
+          → annotations_trainval2017.zip for labels<br>
+          Extract both into <code>data/coco/</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══ FOOTER ════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="ft-inner">
+    <span>ObjectDet.AI v2.0 — Production Object Detection</span>
+    <span>YOLOv8 · COCO 2017 · OpenCV · Flask · Python 3.9+</span>
+    <span>
+      <a href="https://cocodataset.org" target="_blank" class="lnk">cocodataset.org</a>
+      ·
+      <a href="https://ultralytics.com" target="_blank" class="lnk">ultralytics.com</a>
+    </span>
+  </div>
+</footer>
+
+<!-- JSON Modal -->
+<div class="modal-bg hidden" id="jsonModal">
+  <div class="modal">
+    <div class="modal-top">
+      <h3>JSON Response</h3>
+      <button id="mClose">✕</button>
+    </div>
+    <pre class="json-pre" id="jsonPre"></pre>
+    <button class="sm-btn" id="copyJson" style="margin:12px 16px">Copy to Clipboard</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
