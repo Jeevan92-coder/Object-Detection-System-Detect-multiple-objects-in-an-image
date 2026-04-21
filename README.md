@@ -1,47 +1,53 @@
-# 🎯 ObjectDet.AI v2 — Object Detection System
-### YOLOv8 × COCO-80 × OpenCV × Live Camera × Flask
+# 🚀 ObjectDet.AI v2
+
+### Real-Time Object Detection System
+
+**YOLOv8 × COCO-80 × OpenCV × Flask × Live Webcam**
 
 ---
 
-## 🗂️ Project Structure
+## 📌 Overview
+
+**ObjectDet.AI v2** is a full-stack, real-time object detection system built using YOLOv8 and the COCO dataset.
+
+### ✨ Features
+
+* 📷 Live webcam detection (real-time)
+* 🖼️ Image upload detection
+* 📦 Batch image processing
+* 📊 COCO class explorer
+* 🌐 REST API (Flask)
+* 🐳 Docker support
+
+---
+
+## 🏗️ Project Structure
 
 ```
 object-detection-system/
 │
-├── backend/                     # Flask REST API
-│   ├── app.py                   # Main server (8 API routes)
-│   ├── detector.py              # YOLOv8 engine (image + live frame)
+├── backend/
+│   ├── app.py
+│   ├── detector.py
 │   ├── requirements.txt
 │   ├── Dockerfile
 │   ├── .env.example
 │   └── utils/
-│       ├── response_utils.py
-│       └── file_utils.py
 │
-├── frontend/                    # 5-page Web UI
-│   ├── index.html               ← Image upload detection
-│   ├── camera.html              ← 📷 LIVE webcam detection
-│   ├── batch.html               ← Multi-image batch
-│   ├── classes.html             ← COCO class explorer
-│   ├── docs.html                ← API documentation
-│   ├── css/style.css
+├── frontend/
+│   ├── index.html
+│   ├── camera.html
+│   ├── batch.html
+│   ├── classes.html
+│   ├── docs.html
+│   ├── css/
 │   └── js/
-│       ├── api.js               ← All API calls
-│       ├── ui.js                ← Shared UI helpers
-│       ├── main.js              ← Image page logic
-│       └── camera.js            ← Live camera engine
 │
 ├── scripts/
-│   └── download_coco.py         ← Dataset downloader
+│   └── download_coco.py
 │
 ├── data/
-│   └── coco/                    ← ✅ PUT DATASET HERE
-│       ├── images/
-│       │   ├── train2017/
-│       │   └── val2017/
-│       └── annotations/
-│           ├── instances_train2017.json
-│           └── instances_val2017.json
+│   └── coco/
 │
 ├── docker-compose.yml
 ├── nginx.conf
@@ -51,97 +57,111 @@ object-detection-system/
 
 ---
 
-## 📥 COCO Dataset — Kahan Rakhen?
+## 📥 Dataset Setup (COCO)
+
+Place dataset here:
 
 ```
-object-detection-system/
-└── data/
-    └── coco/          ← Yahan rakho (auto-created)
-        ├── images/
-        │   └── val2017/     ← validation images
-        └── annotations/
-            └── instances_val2017.json
+data/coco/
+├── images/
+│   └── val2017/
+└── annotations/
+    └── instances_val2017.json
 ```
 
-### Download karne ka tarika:
+### 🔽 Download
 
 ```bash
-# Option 1: Script se (recommended)
-python scripts/download_coco.py --samples 100   # quick test (100 images)
-python scripts/download_coco.py --full          # full val set ~1 GB
+# Quick test (100 images)
+python scripts/download_coco.py --samples 100
 
-# Option 2: Manual
-# 1. https://cocodataset.org/#download par jao
-# 2. "2017 Val images" download karo  → extract karo data/coco/images/val2017/
-# 3. "2017 Train/Val annotations" download karo → extract karo data/coco/annotations/
+# Full dataset (~1GB)
+python scripts/download_coco.py --full
 ```
+
+Or download manually from:
+https://cocodataset.org/#download
 
 ---
 
 ## ⚡ Quick Start
 
+### 1. Setup
+
 ```bash
-# 1. Setup (ek baar)
 bash setup.sh
+```
 
-# 2. API start karo
+### 2. Start Backend
+
+```bash
 source venv/bin/activate
-cd backend && python app.py
+cd backend
+python app.py
+```
 
-# 3. Frontend open karo
-cd frontend && python3 -m http.server 8080
-# Browser mein: http://localhost:8080
+### 3. Start Frontend
+
+```bash
+cd frontend
+python3 -m http.server 8080
+```
+
+Open in browser:
+
+```
+http://localhost:8080
 ```
 
 ---
 
-## 📷 Live Camera — Kaise Kaam Karta Hai
+## 📷 Live Camera Flow
 
 ```
-Browser Webcam (getUserMedia)
-        │
-        ▼ Every 100ms (10 FPS)
-Canvas.toDataURL() → JPEG base64
-        │
-        ▼ POST /api/detect/frame
-Flask API → YOLOv8 → OpenCV annotation
-        │
-        ▼ Response: annotated frame + detections JSON
-Browser Canvas → drawImage() → real-time overlay
+Webcam → Frame Capture → Base64 → API → YOLOv8 → OpenCV → Browser
 ```
 
-**Keyboard Shortcuts:**
-- `Space` → Snapshot
-- `S` → Start camera
-- `X` → Stop camera
+### ⌨️ Controls
+
+* Space → Snapshot
+* S → Start camera
+* X → Stop camera
 
 ---
 
 ## 📡 API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/health` | Health check |
-| GET | `/api/info` | Model info |
-| POST | `/api/detect/image` | Single image |
-| POST | `/api/detect/frame` | **Live frame (base64)** |
-| POST | `/api/detect/batch` | Up to 10 images |
-| GET | `/api/classes` | COCO classes |
-| GET | `/api/stats` | Server stats |
+| Method | Endpoint          | Description     |
+| ------ | ----------------- | --------------- |
+| GET    | /api/health       | Health check    |
+| GET    | /api/info         | Model info      |
+| POST   | /api/detect/image | Image detection |
+| POST   | /api/detect/frame | Live detection  |
+| POST   | /api/detect/batch | Batch detection |
+| GET    | /api/classes      | COCO classes    |
+| GET    | /api/stats        | Server stats    |
 
 ---
 
 ## 🧠 YOLOv8 Models
 
-| Model | Size | mAP | Speed |
-|-------|------|-----|-------|
-| yolov8n | 6MB | 37.3 | fastest |
-| yolov8s | 22MB | 44.9 | fast |
-| yolov8m | 50MB | 50.2 | balanced |
-| yolov8l | 84MB | 52.9 | accurate |
-| yolov8x | 131MB | 53.9 | most accurate |
+| Model   | Size  | Speed    |
+| ------- | ----- | -------- |
+| yolov8n | 6MB   | Fastest  |
+| yolov8s | 22MB  | Fast     |
+| yolov8m | 50MB  | Balanced |
+| yolov8l | 84MB  | Accurate |
+| yolov8x | 131MB | Best     |
 
-Change in `backend/.env`: `YOLO_MODEL=yolov8s.pt`
+Change model in:
+
+```
+backend/.env
+```
+
+```
+YOLO_MODEL=yolov8s.pt
+```
 
 ---
 
@@ -149,5 +169,41 @@ Change in `backend/.env`: `YOLO_MODEL=yolov8s.pt`
 
 ```bash
 docker-compose up --build
-# → http://localhost:8080
 ```
+
+Open:
+
+```
+http://localhost:8080
+```
+
+---
+
+## 🛠️ Tech Stack
+
+* Backend: Flask, OpenCV, YOLOv8
+* Frontend: HTML, CSS, JavaScript
+* Deployment: Docker, Nginx
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome. For major changes, open an issue first.
+
+---
+
+## 💡 Future Improvements
+
+* GPU support
+* Video detection
+* Object tracking
+* Cloud deployment
+
+---
