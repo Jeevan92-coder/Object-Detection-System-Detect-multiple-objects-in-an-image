@@ -218,4 +218,4 @@ if __name__ == "__main__":
     port  = int(os.getenv("PORT", 5000))
     debug = os.getenv("DEBUG","false").lower() == "true"
     logger.info(f"ODS v2 API starting on port {port}")
-    app.run(host="0.0.0.0", port=port, debug=debug, threaded=True)
+    app.run(host="0.0.0.0", port=port, debug=debug)
